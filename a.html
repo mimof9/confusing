@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>节点的各种宽高</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		#div1, #div2 {
+			width: 100px;
+			height: 100px;
+			background: #ccc;
+			padding: 10px;
+			border: 10px solid #888;
+			margin: 10px;
+			transform: translate(200px, 0px);
+		}
+		#div2 div {
+			width: 200px;
+			height: 200px;
+		}
+		#div2 {
+			overflow: scroll;
+		}
+		#div3 {
+			width: 100px;
+			height: 100px;
+			background: #ccc;
+		}
+	</style>
+</head>
+<body>
+	<div id="div1"></div>
+	<div id="div2">
+		<div></div>
+	</div>
+	<div id="div3"></div>
+	<div id="div4" style="width: 100px; height: 100px; background: #bbb;"></div>
+
+	<pre>
+		clientWidth = width + padding
+		offsetWidth = width + padding + 滚动条 + border
+		scrollWidth = width + padding
+
+		html上的width属性和style上的width属性不是同一个，两者几乎没有关系
+		在页面加载完成后：
+			html标签中使用style属性，可以用node.style.width获取
+			css中指定style属性，是不能够用node.style.width获取, 除非后续自行设置了
+
+		结论：初次获取元素宽高，使用offsetWidth可以保证获取到宽高。
+	</pre>
+
+	<script type="text/javascript">
+		var div1 = document.getElementById('div1'),
+			div2 = document.getElementById('div2'),
+			div3 = document.getElementById('div3'),
+			div4 = document.getElementById('div4');
+
+		console.log(div1.width, div1.style.width);
+		console.log(div1.clientWidth, div1.offsetWidth, div1.scrollWidth);
+
+		console.log(div2.clientWidth, div2.offsetWidth, div2.scrollWidth);
+
+		window.onload = function() {	// 排除是css没有加载完毕，导致的style属性不能读取
+			console.log(div3.width, div3.style.width);
+			console.log(div4.width, div4.style.width);
+			div4.style.width = '200px';
+			console.log(div4.width, div4.style.width);
+		};
+	</script>
+</body>
+</html>
