@@ -4,24 +4,34 @@
 	<title>重叠边框，悬浮显示</title>
 	<meta charset="utf-8">
 	<style type="text/css">
-		#calc {
+		table {
 			background: #ccc;
-			/*border-spacing: 0;*/
 		}
-		#calc td {
+		td {
+			display: inline-block;
 			width: 50px;
 			height: 50px;
 			border: 10px solid #aaa;
 			color: white;
 			text-align: center;
+			line-height: 50px;
 		}
-		#calc td:hover {
+		td:hover {
 			border-color:#666;
+		}
+		td {
+			position: relative;
+		}
+		tr:not(:first-child) td{
+			margin-top: -10px;
+		}
+		tr td:not(:first-child) {
+			margin-left: -10px;
 		}
 	</style>
 </head>
 <body>
-	<table id="calc" cellpadding="0" cellspacing="0">
+	<table cellspacing="0">
 		<tr>
 			<td>1</td>
 			<td>2</td>
@@ -40,10 +50,7 @@
 	</table>
 
 	<pre>
-		要牢记：table默认给每个单元分配了 padding 和 margin
-		想要去除单元之间的空隙：
-		1.在HTML标签中使用cellpadding和cellspacing属性控制
-		2.在CSS中，使用border-spacing
+		实现单元边框重叠，使用相对定位，改变元素位置。
 	</pre>
 </body>
 </html>
