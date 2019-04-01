@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>内联元素各种奇怪的间隙</title>
+	<style type="text/css">
+		div	{
+			width: 900px;
+			height: 50px;
+			background: #ccc;
+		}
+		#four {
+			/*display:block;*/
+			vertical-align: bottom;
+		}
+		#five {
+			vertical-align: baseline;
+		}
+		#six {
+			vertical-align: text-bottom;
+		}
+		#seven {
+			vertical-align: middle;
+		}
+		#eight {
+			vertical-align: text-top;
+		}
+	</style>
+</head>
+<body>
+	<img src="./sample.png" id="one">
+	<img src="./sample.png" id="two"><img src="./sample.png" id="three">
+	<img src="./sample.png" id="four">
+	<div></div>
+	<pre>
+		内联元素会有左右间隙和下面的间隙：
+		1.左右是由于回车换行引起的。
+		2.下面是由于内联元素有四条线，topline, middleline, baseline, bottomline
+			默认情况下，图片占据的文职是topline到baseline。
+			因此，这个间隙就是baseline和bottomline之间的空白。
+	</pre>
+	<p>
+		图文混排
+		<img src="./sample.png" id="five">
+		<img src="./sample.png" id="six">
+		<img src="./sample.png" id="seven">
+		<img src="./sample.png" id="eight">
+		图文混排
+	</p>
+	<pre>
+		vertical-align属性的几个值：
+		1. baseline 图片放在父元素文字的基线上，也就是bottomline和父元素的基线对齐。父元素的基线就是文字的最下端
+		2. text-bottom 元素的低端和父元素文字底端对齐 
+		3. text-top 元素的顶端和父元素文字顶端对齐 
+		4. middle 	元素放在父元素的中间
+		5. bottom 	元素的顶端和行内最低元素的顶端对齐
+		6. top 		元素的顶端和行内最高元素的顶端对齐
+	</pre>
+
+	<pre>
+		
+		有了这些，就可以知道如何去除图片下方的空白间隙了。
+		1. display: block;	// 直接变成块级元素，就不存在垂直对齐线的问题了
+		2. vertical-align: text-bottom/bottom; // 使用垂直对齐
+
+		不管是左右还是下方，事实上都是font。四线格是为了书写文字，换行符也被解析成了文字，
+		因此可以让父元素的font-size: 0;来解决
+	</pre>
+</body>
+</html>
