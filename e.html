@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>清除浮动</title>
+	<style type="text/css">
+		#p1 {
+			width: 500px;
+			border: 1px solid #333;
+			/*overflow: hidden;*/
+		}
+		#p1 div {
+			width: 100px;
+			height: 100px;
+		}
+		#d1 {
+			background: #666;
+			float: left;
+		}
+		#d2 {
+			background: #999;
+			float: left;
+		}
+		#d3 {
+			background: #666;
+			float: left;
+		}
+		#d4 {
+			width: 100px;
+			height: 100px;
+			background: #999;
+		}
+		#p1:after {
+			content: "";
+			display: block;
+			clear: both;
+		}
+	</style>
+</head>
+<body>
+	<div id="p1">
+		<div id="d1"></div>
+		<div id="d2"></div>
+		<div id="d3"></div>
+	</div>
+	<!-- <div style="clear: both;"></div> -->
+	<div id="d4"></div>
+
+	<pre>
+		对浮动元素认识要到位：
+		1. 浮动元素已经脱离了正常的文档流，因此不能撑起容器的宽高
+
+		因此，清除浮动除了要清除浮动之外，还需要让那些浮动元素真的占据位置，否则会遮挡则会正常流中元素。
+		1. 添加额外的元素，clear:both;
+		2. 父元素的最后一个伪元素为块级元素，内容为空，清除左右浮动; 这样，会撑起整个父元素的高度。
+	</pre>
+</body>
+</html>
