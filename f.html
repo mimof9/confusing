@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>form表单的action</title>
+</head>
+<body>
+	<form method="post">
+		user：<input type="text" name="username"><br/>
+		pwd：<input type="password" name="password"><br/>
+		<input type="submit" value="post method">
+	</form>
+
+	<form method="get">
+		user：<input type="text" name="username"><br/>
+		pwd：<input type="password" name="password"><br/>
+		<input type="submit" value="get method">
+	</form>
+
+	<pre>
+		不填写action属性，那么form表单会按照当前地址栏的url设置action
+		换句话说，form表单默认请求的是当前地址栏的url
+	</pre>
+</body>
+</html>

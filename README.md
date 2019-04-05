@@ -8,3 +8,4 @@
 	* 目标效果:![example](./c/target.png "目标效果")
 - 去除内联元素的左右和下方空白间隙？[d.html](./d)
 - 清除浮动？明白浮动元素会脱离正常文档流这点是最重要的。[e.html](./e.html)
+- form表单如果不填写action属性会怎么样？[f.html](./f.html)
