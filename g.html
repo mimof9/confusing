@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>不写分号会出错的情况有哪些？</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<script type="text/javascript">
+		var a = 1, b=1
+		a
+		++
+		b
+		++
+		console.log(a, b)
+	</script>
+
+	<pre>
+		自增，自减：
+		var a = 1, b=1
+		a
+		++
+		b
+		++
+		console.log(a, b)
+
+		本意：a自增 b自增
+		实际上在a，b后面自动添加了分号，a不增，b自增，最后一个++号报错
+	</pre>
+
+	<script type="text/javascript">
+		(function() {
+			console.log(1)
+		})()
+		(function() {
+			console.log(2)
+		})()
+	</script>
+
+	<pre>
+		括号：
+		(function() {
+			console.log(1)
+		})()
+		(function() {
+			console.log(2)
+		})()
+
+		本意：两个立即执行的函数，先输出1，再输出2
+		实际上这里不会自动补全分号，会把
+		(function() {
+			console.log(2)
+		})当作函数调用的参数，因此报错
+	</pre>
+
+	<script type="text/javascript">
+		var arr = [1, 2, 3]
+		[1, 2][0] = 3
+
+		console.log(arr)
+	</script>
+
+	<pre>
+		方括号：
+		var arr = [1, 2, 3]
+		[1, 2][0] = 3
+
+		console.log(arr)
+
+		本意：声明一个数组arr 值为[1, 2, 3]，给[1, 2这个数组字面量的第0位赋值为3
+		实际执行过程：[1, 2, 3]后面不会自动添加分号,
+		因此变成了var arr = [1, 2, 3][1, 2][0] = 3
+		[1, 2, 3][1, 2][0] = 3这个表达式的返回值是3
+		所以最后arr被赋值成了3
+	</pre>
+
+	<script type="text/javascript">
+		var i = 10
+		/2/.test('abc')
+	</script>
+
+	<pre>
+		正则表达式：
+		var i = 10
+		/2/.test('abc')
+
+		本意：申明一个变量i，值为10。 接下来是一个正则表达式/2/
+		实际执行过程：10后面不会自动添加分号，因此被解析为 10 / 2
+		后面导致语法错误
+	</pre>
+
+</body>
+</html>
