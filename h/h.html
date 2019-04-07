@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>让人迷惑的换行</title>
+	<style type="text/css">
+		div {
+			width: 120px;
+			height: 100px;
+			border: 1px solid black;
+		}
+		#box1 {
+			white-space: normal;
+			word-break: normal;
+			word-wrap: normal;
+		}
+		#box2 {
+			white-space: nowrap;
+		}
+		#box3 {
+			word-break: keep-all;
+		}
+		#box4 {
+			word-break: break-all;
+		}
+		#box5 {
+			word-wrap: break-word;
+		}
+	</style>
+</head>
+<body>
+	<div id="box1">
+		Hi&nbsp;&nbsp;,
+		This   is a incomprehensibilities long word.
+		<br/>
+		你好&nbsp;&nbsp;，
+		这   是一个不可思议的长单词
+	</div>
+
+	<pre>
+		浏览器默认的换行规则：white-space|word-break|word-wrap: normal;
+		1. 多个空白符(制表符 空格 回车换行等)，会合并成一个空格，首尾的会去掉。想要多个空白符，使用&nbsp;
+		2. 不截断单词，按照容器宽度换行，当一个英文单词超过宽度时，该单词不会被截断，会超出容器宽度
+		3. 中文的长单词会换行，不会当作一个单词
+		4. 高度限制，不起作用
+	</pre>
+
+	<div id="box2">
+		Hi&nbsp;&nbsp;,
+		This   is a incomprehensibilities long word.
+		<br/>
+		你好&nbsp;&nbsp;，
+		这   是一个不可思议的长单词
+	</div>
+
+	<pre>
+		不换行：white-space: nowrap;
+		1. 不会根据容器宽度自动换行，直到遇到&lt;br/&gt;
+		2. 至于其它的值，个人认为不重要
+	</pre>
+
+	<div id="box3">
+		Hi&nbsp;&nbsp;,
+		This   is a incomprehensibilities long word.
+		<br/>
+		你好&nbsp;&nbsp;，
+		这   是一个不可思议的长单词
+	</div>
+
+	<pre>
+		保持所有单词的完整，word-break: keep-all;
+		1. 和默认换行规则只有一点不同 会把连在一起的中文也当作长单词来处理，不进行换行
+	</pre>
+
+	<div id="box4">
+		Hi&nbsp;&nbsp;,
+		This   is a incomprehensibilities long word.
+		<br/>
+		你好&nbsp;&nbsp;，
+		这   是一个不可思议的长单词
+	</div>
+
+	<pre>
+		可以在单词中进行换行，word-break: break-all;
+		1. 和默认换行规则只有一点不同 不会保证长单词的完整性，在超出容器宽度后就会换行
+	</pre>
+
+	<div id="box5">
+		Hi&nbsp;&nbsp;,
+		This   is a incomprehensibilities long word.
+		<br/>
+		你好&nbsp;&nbsp;，
+		这   是一个不可思议的长单词
+	</div>
+
+	<pre>
+		允许长单词换行到下一行，word-wrap: break-word;
+		1. 遇到单词放不下，会尝试把单词换到下一行，而不是把单词拆开
+		2. 宽度不会超出容器范围
+		3. 不认中文长单词
+	</pre>
+</body>
+</html>
