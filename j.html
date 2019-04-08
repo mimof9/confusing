@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>数组方法的参数</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<script type="text/javascript">
+		var arr = [1, 22, 33, -11]
+
+		// map会做四次
+		arr.map(function(cur, index, arr) {
+			console.log(cur, index, arr)
+		})
+
+		// ruduce只做三次 prev等于前一次的return值 初始为第一个
+		arr.reduce(function(prev, cur, index, arr) {
+			console.log(prev, cur, index, arr)
+		})
+
+		arr.reduce(function(prev, cur, index, arr) {
+			console.log(prev, cur, index, arr)
+			return prev
+		})
+
+		var sum = arr.reduce(function(prev, cur, index, arr) {
+			return prev + cur
+		})
+		console.log(sum)
+		console.log(arr.reduce((p, c) => p + c))
+	</script>
+
+	<pre>
+		map方法是非常容易理解的，
+		来看reduce方法和map方法的差别
+		1. map方法的参数只有三个cur, index, arr 但是reduce方法多了一个prev, cur, index, arr
+		2. map会对数组中每个数都执行一遍函数，reduce则是从第二个数开始执行
+
+		其实记这些没有太大的用处，理解到reduce是一个合并的归一的方法才最重要。
+		prev初始值就是第一个值，之后prev等于上一次执行函数的返回值。所以累加方法可以这样写：
+		var sum = arr.reduce(function(prev, cur, index, arr) {
+			return prev + cur
+		})
+
+		更精简一些 可以直接写
+		arr.reduce((p, c) => p + c)
+	</pre>
+</body>
+</html>
