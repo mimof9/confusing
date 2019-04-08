@@ -13,3 +13,4 @@
 - 空白和换行该如何控制？内容超出容器范围如何处理？[h文件夹](./h)
 - 为什么判断数组要用Object.prototype.toString.call？[i文件夹](./i)
 - 数组的reduce方法该怎么用？可以用它做累加吗？[j.html](./j.html)
+- position属性除了相对和绝对，还有什么？[k文件夹](./k)

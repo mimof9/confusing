@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>position定位</title>
+	<style type="text/css">
+		.p1 {
+			height: 1000px;
+		}
+
+		.p2 {
+			position: sticky;
+			top: 100px;
+			left: 100px;
+			width: 100px;
+			height: 100px;
+			background: #ccc;
+			float: left;
+		}
+		.p3 {
+			position: fixed;
+			top: 100px;
+			left: 200px;
+			width: 100px;
+			height: 100px;
+			background: #c0c0c0;
+			float: left;
+		}
+		.p4 {
+			position: sticky;
+			bottom: 100px;
+			left: 300px;
+			width: 100px;
+			height: 100px;
+			background: #ccc;
+			float: left;
+		}
+	</style>
+</head>
+<body>
+	<pre>
+		1. fixed是相对于viewport可视区域来定位的，脱离了正常文档流
+		2. sticky粘性定位
+			1. 不脱离文档流
+			2. 相对最近的定位了的父容器，进行定位
+			3. 如果按照正常流排版，没有超出top，那么就按照正常流排版，如果后来滑动的时候超过了，那么就固定住
+		所谓的超出，是指，如果top设为50px 正常流中top>50px 就没有超出，向上移动的过程中，top减小，最小减到50
+		如果设置bottom的话 那么情况正好相反
+	</pre>
+
+	<div class="p1"></div>
+
+	<div class="p2"></div>
+	<div class="p3"></div>
+	<div class="p4"></div>
+
+	<div class="p1"></div>
+</body>
+</html>
