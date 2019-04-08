@@ -11,3 +11,4 @@
 - form表单如果不填写action属性会怎么样？[f.html](./f.html)
 - 哪些情况下不写分号会导致执行结果与预期不符？[g.html](./g.html)
 - 空白和换行该如何控制？内容超出容器范围如何处理？[h文件夹](./h)
+- 为什么判断数组要用Object.prototype.toString.call？[i文件夹](./i)

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>判断数组的正确方法</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<pre>
+		本例引用了框架，根据同源策略，两文件需要同源。
+		1. 最简单的做法是做一个nginx静态服务器 把两个文件放进去
+		2. 当然也可以搭建一个完整的web服务，不过作为演示来说 没有必要	
+	</pre>
+
+	<iframe src="./ifr.html" width="100px" height="100px"></iframe>
+	<script type="text/javascript">
+		// 当前框架
+		var arr = [2, 3, 4];
+		console.log(arr instanceof Array);
+		console.log(arr.constructor === Array);
+		console.log(Array.isArray(arr));
+		console.log(Object.prototype.toString.call(arr) === '[object Array]');
+		// 其他框架
+		var ifr = document.getElementsByTagName('iframe')[0];
+		ifr.onload = function(event) {
+			var ifrArr = top.frames[0].arr;
+			console.log(ifrArr instanceof Array);
+			console.log(ifrArr.constructor === Array);
+			console.log(Array.isArray(ifrArr));
+			console.log(Object.prototype.toString.call(ifrArr) === '[object Array]');
+		} 
+	</script>
+
+	<pre>
+		判断数组的几种方法：
+		1. obj instanceof Array
+		2. obj.constructor === Array
+		3. Array.isArray(obj)
+		4. Object.prototype.toString.call(obj) === '[object Array]'
+
+		前两个方法：在不同框架之间判断会出错
+		原因在于：不同框架，有自己的全局对象global，其中的Array是不同的函数，所以判断会出错
+	</pre>
+</body>
+</html>
