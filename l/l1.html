@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>函数节流和去抖</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		div {
+			height: 2000px;
+		}
+	</style>
+</head>
+<body>
+	<script type="text/javascript">
+		window.onscroll = function() {
+			console.log('scroll')
+		}
+	</script>
+
+	<pre>
+		监听窗口的滑动事件，每次滑动都会出发很多次回调。
+		考虑到DOM操作的复杂性，以及可能带来的重绘(repaint)甚至回流(reflow)。
+		为了降低开销
+		1.可以采取控制触发频率的手段：
+		举个例子，限制每1秒只能触发1次滑动事件的回调函数，这个就叫做函数节流
+		2.可以采取重新设置延时触发的手段：
+		举个例子，当应该触发函数的时候，重新设置延时，这样，就只会触发一次回调
+	</pre>
+
+	<div></div>
+</body>
+</html>

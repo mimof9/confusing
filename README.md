@@ -14,3 +14,4 @@
 - 为什么判断数组要用Object.prototype.toString.call？[i文件夹](./i)
 - 数组的reduce方法该怎么用？可以用它做累加吗？[j.html](./j.html)
 - position属性除了相对和绝对，还有什么？[k文件夹](./k)
+- 函数节流和去抖是什么意思？怎么实现？[l文件夹](./l)

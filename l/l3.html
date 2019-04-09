@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>函数节流</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		div {
+			height: 2000px;
+		}
+	</style>
+</head>
+<body>
+	<script type="text/javascript">
+		function throttle(method, context) {
+			console.log('触发了节流函数')
+			let nowTimeStamp = (new Date()).getTime()
+			method.lastTimeStamp = method.lastTimeStamp || 0
+			if (nowTimeStamp - method.lastTimeStamp >= 1000) {
+				method.call(context)
+				method.lastTimeStamp = nowTimeStamp
+			}
+		}
+
+		function print() {
+			console.log('scroll')
+		}
+
+		window.onscroll = function() {
+			throttle(print)
+		}
+	</script>
+
+	<pre>
+		节流的实现：
+		记录上次回调执行的时间，然后和当前时间对比
+	</pre>
+
+	<div></div>
+</body>
+</html>

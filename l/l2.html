@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>函数去抖</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		div {
+			height: 2000px;
+		}
+	</style>
+</head>
+<body>
+	<script type="text/javascript">
+		function debounce(method, context) {
+			console.log('触发了去抖函数')
+			clearTimeout(method.tId)
+			method.tId = setTimeout(function() {
+				method.call(context)
+			}, 1000)
+		}
+
+		function print() {
+			console.log('scroll')
+		}
+
+		window.onscroll = function() {
+			debounce(print)
+		}
+	</script>
+
+	<pre>
+		去抖的经典实现，是高程3中给出的。
+		想法，就是每次执行去抖函数的时候，都清除之前的延时执行，重新设置延时。
+		从而达到控制回调的目的。
+	</pre>
+
+	<div></div>
+</body>
+</html>
