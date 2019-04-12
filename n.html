@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>a标签的各种状态</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		a {
+			color: red;
+			text-decoration: none;
+		}
+		a:link {
+			color: green;
+		}
+		a:visited {
+			color: blue;
+		}
+		a:hover {
+			color: yellow;
+		}
+		a:active {
+			color: gray;
+		}
+	</style>
+</head>
+<body>
+	<pre>
+		a标签有四个状态：
+			a:link 未访问过
+			a:visited 已访问过
+			a:hover 鼠标悬停
+			a:active 被点击那一刻
+		需要按顺序写：
+			love and hate
+	</pre>
+	<a href="#">love and hate</a>
+
+	<pre>
+		a标签中的颜色会被link状态覆盖， link状态只在从未访问过时显示。
+		如果点击过后：这是a标签最常见的状态
+		在三个状态之间切换
+			点击 visited -> hover -> active -> visited
+
+		所以 如果不是为了可以区分 把link和visited设为一样的颜色最合适
+	</pre>
+</body>
+</html>
