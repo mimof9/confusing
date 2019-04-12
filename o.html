@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>编码</title>
+	<meta charset="utf-8">
+</head>
+<body>
+
+	<pre>
+		服务器返回的html数据会进行编码，这个时候再用innerHTML就不会有html的效果
+		需要先做转码，才能有html效果
+	</pre>
+
+	<pre>
+		html要编码的内容需要手动做：
+		<, >, &, 非换行空白, ', " 
+
+		uri只能使用ascii且空格也编码，因此中文也需要编码，且js提供了内置函数做这个事儿
+	</pre>
+
+	<div id="encode">&lt;p&gt;nihao&lt;/p&gt;</div>
+	<div id="decode"></div>
+
+	<script type="text/javascript">
+		function decodeHTML (str){
+            var s = "";
+            if(str.length == 0) return "";
+            s = str.replace(/&amp;/g,"&");
+            s = s.replace(/&lt;/g,"<");
+            s = s.replace(/&gt;/g,">");
+            s = s.replace(/&nbsp;/g," ");
+            s = s.replace(/&#39;/g,"\'");
+            s = s.replace(/&quot;/g,"\"");
+            return s;
+        }
+		
+		var d1 = document.getElementById("encode")
+		d2.innerHTML = decodeHTML(d2.innerHTML)
+	</script>
+</body>
+</html>
