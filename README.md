@@ -18,3 +18,4 @@
 - 图片使用Data URI的作用是什么？[m文件夹](./m)
 - a标签的各种状态？[n.html](./n.html)
 - html的编解码？和uri的区别？[o.html](./o.html)
+- h5的拖拽事件，实现一个拖拽元素？[p.html](./p.html)
