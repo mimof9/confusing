@@ -16,6 +16,10 @@
 
 	<pre>
 		1. class="draggable" 让元素可以拖拽
+		2. 绝对定位元素
+		3. mousedown时，记录下鼠标点击位置，相对拖拽元素左上角的相对点击位置
+		4. mousemove时，修改根据鼠标点击位置和第3步得到的相对点击位置
+			动态修改left和top 移动元素
 	</pre>
 
 	<script type="text/javascript">
@@ -23,16 +27,17 @@
 		p.move = false;
 		p.onmousedown = function() {
 			this.move = true;
+			// 记录下鼠标点击元素相对左上角的位置
 			this.left = event.clientX - this.offsetLeft;
 			this.top = event.clientY - this.offsetTop;
 		}
 		p.onmousemove = function() {
 			if (this.move) {
-				p.style.left = event.clientX-this.left + 'px';
-				p.style.top = event.clientY-this.top + 'px';
+				p.style.left = event.clientX - this.left + 'px';
+				p.style.top = event.clientY - this.top + 'px';
 			}
 		}
-		document.onmouseup = function() {	// 快速移动的时候
+		document.onmouseup = function() {
 			p.move = false;
 		}
 	</script>

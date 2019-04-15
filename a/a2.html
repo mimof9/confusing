@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>节点的各种位置</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		* {
+			margin: 0px;
+			padding: 0px;
+		}
+
+		div {
+			width: 100px;
+			height: 100px;
+			background: #ccc;
+			border-left: 10px solid #888;
+		}
+
+		.d2 {
+			margin-left: 50px;
+		}
+
+		.d3 {
+			margin-left: 50px;
+			overflow: scroll;
+		}
+
+		.d3 div {
+			width: 200px;
+			height: 200px;
+			border: 0px;
+		}
+
+		.d4 {
+			margin-left: 50px;
+			overflow: scroll;
+		}
+
+		.d4	div {
+			width: 200px;
+			height: 200px;
+			border: 0px;
+		}
+	</style>
+</head>
+<body>
+	<div class="d1"></div>
+	<div class="d2"></div>
+	<div class="d3">
+		<div></div>
+	</div>
+	<div class="d4">
+		<div></div>
+	</div>
+
+	<pre>
+		offsetLeft：相对最近的定位的父元素的左上角
+		clientLeft：就是border-left的宽度，和padding没有关系
+		scrollLeft：scroll向右滑动的距离
+
+		最常用的应该是offsetLeft
+	</pre>
+
+	<script type="text/javascript">
+		var ds = document.getElementsByTagName('div'),
+			d1 = ds[0],
+			d2 = ds[1],
+			d3 = ds[2],
+			d4 = ds[4]		// 这里不是ds[3] ds[3]是d3的内部div
+
+		d4.scrollLeft = 50
+
+		console.log(d1.offsetLeft, d1.clientLeft, d1.scrollLeft)
+		console.log(d2.offsetLeft, d2.clientLeft, d2.scrollLeft)
+		console.log(d3.offsetLeft, d3.clientLeft, d3.scrollLeft)
+		console.log(d4.offsetLeft, d4.clientLeft, d4.scrollLeft)
+	</script>
+</body>
+</html>
