@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>善变的this</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<pre>
+		全局下：
+			严格模式   this === undefied
+			非严格模式 this === window
+
+		普通函数：
+			在执行时，会被传入两个参数this和arguments
+			this是在运行时基于函数的执行环境绑定的
+			1. 全局中调用 this === window
+			2. 作为对象方法 this === 该对象
+			
+		让人困惑的是，匿名函数(或作为函数来调用) 是具有全局性的，这是一个语言的错误。
+			1. 对象的方法中定义的函数，this === window
+			2. 闭包中的this
+		解决方法很简单，保存外部的this 做法：var that = this 即可
+
+		箭头函数：
+			没有arguments，this是词法作用域，通俗理解为:this继承定义它的父级的this
+			如果在函数中定义，那么继承这个函数的this
+
+		最最重要的思想：
+			前述的匿名函数全局性的缺陷，要用var that = this
+			但是，箭头函数继承父级this，因此，不用做这个操作，直接使用this即可
+			使用场景：
+			1. 回调函数经常需要使用父级的this, 箭头函数用起来很方便
+			2. 对象的方法，对象的方法往往要使用自己的this，因此用普通函数更好
+	</pre>
+	
+	<script type="text/javascript">
+		var fun = function() {
+			console.log(this)
+		}
+
+		var obj = {
+			fun1: function() {
+				console.log(this)
+			},
+			fun2: function() {
+				(function() {
+					console.log(this)
+				})()
+			},
+			fun3: function() {
+				return function() {
+					return this
+				}
+			},
+			arrowFun: () => {
+				console.log(this)
+			}
+		}
+		var arrowFun = () => {
+			console.log(this)
+		}
+
+		fun()
+		obj.fun1()
+		obj.fun2()
+		console.log(obj.fun3()())
+		
+		arrowFun()
+		obj.arrowFun()
+
+		// 作为函数在调用
+		setTimeout(() => {
+			console.log(this)
+		}, 1000)
+
+		setTimeout(function() {
+			console.log(this)
+		}, 1000)
+	</script>
+</body>
+</html>
