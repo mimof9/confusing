@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>键盘事件</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		
+	</style>
+</head>
+<body>
+	<input type="text">
+	<pre>
+		按英文字母，上方数字键，+ - ~ 回车
+		keydown
+		keypress
+		keyup
+
+		其他按键
+		keydown
+		keyup
+	</pre>
+
+	<input type="text" name="name">
+	<pre>
+		按下的按键
+		key 按键英文描述
+		keyCode 按键编码
+
+		注意：
+		使用输入法时，编码为229, 描述为"Process"
+	</pre>
+
+	<script type="text/javascript">
+		var ipts = document.getElementsByTagName("input"),
+			ipt1 = ipts[0],
+			ipt2 = ipts[1]
+
+		ipt1.addEventListener("keydown", function(event) {
+			console.log('keydown')
+		})
+
+		ipt1.addEventListener("keyup", function(event) {
+			console.log('keyup')
+		})
+
+		ipt1.addEventListener("keypress", function(event) {
+			console.log('keypress')
+		})
+
+		ipt2.addEventListener("keydown", function(event) {
+			console.log(event.keyCode, event.key)
+		})
+
+		ipt2.addEventListener("keyup", function(event) {
+			console.log(event.keyCode, event.key)
+		})
+
+		ipt2.addEventListener("keypress", function(event) {
+			console.log(event.keyCode, event.key)
+		})
+	</script>
+</body>
+</html>

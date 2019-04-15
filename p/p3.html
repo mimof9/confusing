@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>html事件</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<input type="text" id="name">
+	<div style="height: 3000px" ></div>
+
+	<script type="text/javascript">
+		window.addEventListener('load', function() {
+			console.log('文档加载完毕')
+		})
+
+		window.addEventListener('resize', function() {
+			console.log('改变窗口大小')
+		})
+
+		window.addEventListener('scroll', function() {
+			console.log('滚动条滚动')
+		})
+
+		var ipt = document.getElementById("name")
+		ipt.addEventListener('select', function(event) {
+			console.log(this.value.slice(this.selectionStart, this.selectionEnd))
+		})
+	</script>
+</body>
+</html>

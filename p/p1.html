@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>鼠标事件</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		div {
+			width: 100px;
+			height: 100px;
+			background: #ccc;
+		}
+	</style>
+</head>
+<body>
+	<div></div>
+	<pre>
+		进去，然后离开会触发事件：
+		mouseover
+		mouseenter
+		mousemove 若干次
+		mouseout
+		mouseleave
+		注意：
+		onmouseover、onmouseout：鼠标移动到自身时候会触发事件,同时移动到其子元素身上也会触发事件,也就是会冒泡
+		onmouseenter、onmouseleave：不支持冒泡
+
+		点击，会触发事件：
+		mousedown
+		mouseup
+		click
+		注意：只有左键才会有click事件，右键和滚轮只有前两个事件
+	</pre>
+
+	<div></div>
+	<pre>
+		点击位置：
+		clientX、clientY 点击位置距离当前body可视区域的x，y坐标
+		pageX、pageY	对于整个页面来说，包括了被卷去的body部分的长度
+		screenX、screenY 点击位置距离当前电脑屏幕的x，y坐标
+		offsetX、offsetY 相对于带有定位的父盒子的x，y坐标
+
+		点击的按键：
+		0 左键
+		1 中间滑轮
+		2 右键
+		如果还有别的键 比如快捷键就是3 4顺着下去
+
+		配合键盘事件：
+		shiftKey
+		ctrlKey
+		metaKey
+		altKey
+	</pre>
+
+	<img src="./xy.png" width="600px">
+
+	<script type="text/javascript">
+		var ds = document.getElementsByTagName("div"),
+			d1 = ds[0],
+			d2 = ds[1]
+
+		d2.addEventListener('click', function(event) {
+			console.log(event.clientX, event.clientY)
+			console.log(event.pageX, event.pageY)
+			console.log(event.screenX, event.screenY)
+			console.log(event.offsetX, event.offsetY)
+
+			console.log(event.altKey, event.ctrlKey, event.shiftKey, event.metaKey)
+		})
+
+		d2.addEventListener('mousedown', function(event) {
+			console.log(event.button)
+		})
+
+		d1.addEventListener('click', function() {
+			console.log('click')
+		})
+
+		d1.addEventListener('dblclick', function() {
+			console.log('dblclick')
+		})
+
+		d1.addEventListener('mousedown', function() {
+			console.log('mousedown')
+		})
+
+		d1.addEventListener('mouseup', function() {
+			console.log('mouseup')
+		})
+
+		d1.addEventListener('mouseover', function() {
+			console.log('mouseover')
+		})
+
+		d1.addEventListener('mouseout', function() {
+			console.log('mouseout')
+		})
+
+		d1.addEventListener('mousemove', function() {
+			console.log('mousemove')
+		})
+
+		d1.addEventListener('mouseenter', function() {
+			console.log('mouseenter')
+		})
+
+		d1.addEventListener('mouseleave', function() {
+			console.log('mouseleave')
+		})
+
+	</script>
+</body>
+</html>
