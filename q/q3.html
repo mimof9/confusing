@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>动画</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		@keyframes myAnimation {
+			0% {background: red;}
+			50% {background: green;}
+			100% {background: blue;}
+		}
+
+		div {
+			width: 100px;
+			height: 100px;
+			animation: myAnimation 5s linear 2s 3 alternate;
+		}
+	</style>
+</head>
+<body>
+	<pre>
+		1. 使用@keyframe规则来创建动画
+		2. 在要应用动画的选择器中 添加animation属性 指定上述动画
+
+		需要注意，动画不会影响元素本身的属性，也就是说100%处指定的属性，
+		在动画执行完成后并不会保留下来，元素会还原到本身的属性
+
+		animation属性比transition有更多的选择：
+		1. 应用的keyframe的名字
+		2. 持续时间
+		3. 时间曲线
+		4. 延迟时间
+		5. 循环次数
+		6. 
+			1. normarl
+			2. reverse 反向播放
+			3. alternate 奇数次正向播放
+			4. alternate-reverse 奇数次反向播放
+		动画是否正在播放 animation-play-state
+			1. paused
+			2. running
+	</pre>
+
+	<div></div>
+</body>
+</html>

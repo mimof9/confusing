@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>过渡</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		div {
+			width: 100px;
+			height: 100px;
+			background: #ccc;
+			transition: width 2s ease-in-out;
+		}
+		div:hover {
+			width: 300px;
+		}
+	</style>
+</head>
+<body>
+	<pre>
+		首先要明白过渡的意思：
+		css3中，当样式发生改变的时候，可以给这个改变添加一个过渡效果。
+		原理是根据开始样式和结尾样式，由css自动补全中间过程，相当于补间动画
+		
+		第二，要明白的是，过渡效果和2D/3D转换，没有一点点关系。就只是关键字比较像。
+	</pre>
+
+	<div></div>
+
+	<pre>
+		具体做法：
+		添加transition属性：要过渡的CSS属性名称 过渡时间 过渡曲线 延迟时间
+
+		名称可以指定 all 或者 width这种具体的
+		时间和延迟时间就不说了
+		过渡曲线默认为 ease 都是三阶贝塞尔曲线
+		linear		匀速				cubic-bezier(0, 0, 1, 1)
+		ease 		慢 快 慢			cubic-bezier(0.25, 0.1, 0.25, 1)
+		ease-in 	慢 快			cubic-bezier(0.42, 0, 1, 1)
+		ease-out 	快 慢			cubic-bezier(0, 0, 0.58, 1)
+		ease-in-out 慢 匀速 慢			cubic-bezier(0.42, 0, 0.58, 1)
+		cubic-bezier(n,n,n,n)
+	</pre>
+</body>
+</html>
