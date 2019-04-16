@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>text和html获取了什么内容</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<div>
+		&lt;p&gt;段落&lt;p/&gt;
+	</div>
+	<div>
+		<p>段落</p>
+	</div>
+
+	<pre>
+		初始化：
+			字符实体
+		获取：
+			innerHTML，里面是什么就返回什么，字符实体原样返回
+			innerText，忽略标签，但是会转换字符实体
+			没有value
+	</pre>
+
+	<textarea>
+		&lt;p&gt;段落&lt;p/&gt;
+	</textarea>
+	<textarea>
+		<p>段落<p/>
+	</textarea>
+
+	<pre>
+		textarea:
+		value获取的是html代码
+	</pre>
+
+	<input value="&lt;p&gt;段落&lt;p/&gt;" />
+	<input value="<p>段落<p/>" />
+
+	
+	
+
+	<script type="text/javascript">
+		var ds = document.getElementsByTagName('div'),
+			d1 = ds[0],
+			d2 = ds[1]
+
+		var tas = document.getElementsByTagName('textarea'),
+			ta1 = tas[0],
+			ta2 = tas[1]
+
+		var is = document.getElementsByTagName('input'),
+			is1 = is[0],
+			is2 = is[1]
+
+		console.log(d1.innerText)
+		console.log(d1.innerHTML)
+
+		console.log(d2.innerText)
+		console.log(d2.innerHTML)
+
+		console.log(ta1.value)
+		console.log(ta1.innerHTML)
+
+		console.log(ta2.value)
+		console.log(ta2.innerHTML)
+
+		console.log(is1.value)
+		console.log(is1.innerHTML)
+
+		console.log(is2.value)
+		console.log(is2.innerHTML)
+
+		
+
+	</script>
+</body>
+</html>
