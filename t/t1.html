@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vue事件绑定</title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="app1">
+		<button v-on:click="alert('hello')">click1</button>
+		<button v-on:click="show1">click2</button>
+		<button v-on:click="show2('hello')">click3</button>
+		<button v-on:click="show3($event, 'hello')">click4</button>
+	</div>
+
+	<pre>
+		click1:
+			在所属vue实例下，没有定义alert函数 因此调用会报错
+		click2:
+			事件直接绑定函数，只用传函数名，函数会自动获得event，就像原生事件绑定一样
+		click3:
+			如果要传参数，就需要直接进行函数调用，因为绑定值可以是表达式，所以相当于先促发了
+			click事件，然后在click事件的处理程序中 调用了函数。
+			需要注意的是：这时，show2是没有event参数的
+		click4:
+			如果既要传参数，又要event，就需要用到$event
+	</pre>
+
+	<pre>
+		至此，大概可以猜出vue事件处理的流程，
+			1. 事件处理的处理程序就是=号后面的表达式
+			2. 然后在vue实例的作用域下去执行表达式
+		另外：
+			为了实现按键选择，阻止事件传播，阻止默认行为等，提供了一系列修饰符，用起来比较方便
+	</pre>
+
+	<script type="text/javascript">
+		var app = new Vue({
+			el: '#app1',
+			methods: {
+				show1: function(event) {
+					alert(event)
+					alert('hello')
+				},
+				show2: function(event, msg) {
+					alert(event)
+					alert(msg)
+				},
+				show3: function(event, msg) {
+					alert(event)
+					alert(msg)
+				}
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>父子组件通信</title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<pre>
+		前置知识：
+			注册一个组件
+				1. 全局注册
+				2. 局部注册
+			注意事项：
+				组件的data属性，不能是一个对象，得写成一个方法
+				原因在于，写成对象会被所有这个组件的实例共享，写成方法为每个实例返回不同的对象
+	</pre>
+
+	<img src="./component.png" width="400">
+
+	<pre>
+		理解 Pass Props这一流程
+	</pre>
+
+	<div id="app">
+		<!-- 最简单的 -->
+		<son-component message="父组件传递过来的数据"></son-component><br/>
+		<!-- 绑定父组件数据 -->
+		<input v-model="message">
+		<son-component v-bind:message="message"></son-component>
+	</div>
+
+	<script type="text/javascript">
+		var app = new Vue({
+			el: '#app',
+			data: {
+				message: '父组件数据'
+			},
+			components: {
+				'son-component': {
+					props: ['message'],
+					template: `<button>{{message}}</button>`
+				} 
+			}
+		})
+	</script>
+
+	<pre>
+		以上是父组件向子组件传递数据
+		传递的数据可以直接绑定到父组件的data属性数据
+		这样，当父组件数据变化，子组件自动变化
+	</pre>
+
+	<pre>
+		和react相似，数据流也是单向的。
+		当父组件的属性变化时，将传导给子组件，但是不会反过来。这是为了防止子组件无意修改了父组件的状态——这会让应用的数据流难以理解。
+		另外，每次父组件更新时，子组件的所有 prop 都会更新为最新值。这意味着你不应该在子组件内部改变 prop 。如果你这么做了，Vue 会在控制台给出警告。
+
+		所以，子组件修改prop的变通方法为：
+			1. 使用prop 创建自己局部的data
+			2. 根据prop 创建computed属性
+	</pre>
+
+</body>
+</html>

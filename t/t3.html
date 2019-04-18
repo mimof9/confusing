@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>父子组件通信</title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<pre>
+		前置知识：
+			vue事件绑定方法:
+				1. v-on:click=""
+				2. 简写 @click=""		
+	</pre>
+
+	<img src="./component.png" width="400">
+
+	<pre>
+		理解 Emit Events这一流程
+	</pre>
+
+	<div id="app">
+		<p>{{ total }}</p>
+		<son-component v-on:qiaoliang="faincrement"></son-component>	
+	</div>
+
+	<script type="text/javascript">
+		var app = new Vue({
+			el: '#app',
+			data: {
+				total: 0
+			},
+			methods: {
+				faincrement: function() {
+					this.total++
+				}
+			},
+			components: {
+				'son-component': {
+					template: `<button v-on:click="sonincrement">调用父类方法</button>`,
+					methods: {
+						sonincrement: function() {
+							this.$emit('qiaoliang')
+						}
+					}
+				}
+			} 
+		})
+	</script>
+
+	<pre>
+		每个 Vue 实例都实现了事件接口(Events interface)，即
+			1. 使用 $on(eventName) 监听事件
+			2. 使用 $emit(eventName) 触发事件
+
+		子组件就是普通的事件处理，
+		特别之处在于调用了$emit('qiaoliang')，这是通知父组件调用qiaoliang所对应的方法
+		父组件在使用子组件的时候，使用v-on:qiaoliang="faincrement"将自己的faincrement方法绑定了到了 qiaoliang事件
+
+		这就是自定义事件。
+	</pre>
+
+	<pre>
+		至此，父子组件通信基本完成：
+		1. 父组件是使用 props 传递数据给子组
+		2. 子组件使用 自定义事件 把数据传递回去
+	</pre>
+</body>
+</html>
