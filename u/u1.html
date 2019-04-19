@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>文件上传</title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="./jquery-1.12.4.min.js"></script>
+</head>
+<body>
+	<pre>
+		实际业务中，很可能要求不用form，进行多文件的提交。
+		下面是对这一过程的剖析：
+		1. input type="file" 可以获取它的files
+		2. 通过FormData添加files
+		3. 使用ajax提交文件
+
+		使用form表单的话，相当于把这些过程封装了。
+
+		如果用到了各种封装好的文件上传组件，牢记这个最基本操作，才能游刃有余。
+		举个例子，如果使用element-ui的el-upload，它默认是选择文件立刻上传，
+		我们希望选择文件仅做预览，点击提交时和其他数据一起提交。
+		事实上，el-upload肯定也是封装的input type="file"。 那么一定也会有files。
+		那么需要做的工作就是找出files即可。
+		然后阅读一下el-upload的官方文档，很快就可以找到解决方案。	
+	</pre>
+
+	<form action="http://localhost:8020/upload" method="post" enctype="multipart/form-data">
+		<input type="file" name="fileUpload">
+		<input type="submit" value="上传文件">
+	</form>
+
+	<form action="http://localhost:8020/upload" method="post" enctype="multipart/form-data"
+		id="nojump">
+		<input type="file" name="fileUpload">
+		<input type="submit" value="上传文件">
+	</form>
+
+	<script type="text/javascript">
+		var $nojump = $('#nojump')
+		$nojump.on('submit', function(event) {
+			$.ajax({
+				type: "post",
+				url: "http://localhost:8020/upload",
+				data: $nojump.serialize(),
+			}).success(function(message) {
+				console.log(message)
+			}).fail(function(err){
+				console.log(err)
+			})
+			// 阻止表单默认的跳转事件
+			event.preventDefault()
+		})
+	</script>
+
+	<pre>
+		以上演示的，使用表单提交数据
+			1. 标题提交数据默认页面会跳转。
+			2. 阻止表单的默认操作，使用ajax提交表单数据
+			结论：2的做法，其实完全可以不用表单，就像接下来的做法一样
+
+		接下来看脱离表单，提交数据
+	</pre>
+
+	<input type="file" id="singlefile">
+	<button id="singlebtn">单文件上传</button>
+	<br/>
+
+	<pre>
+		使用ajax上传文件要注意：
+			1. processData设置为false
+				1. 默认是true 表示对data进行序列化，FormData格式不需要序列化
+			2. contentType设置为false
+				1. 如果不设置，默认为application/x-www-form-urlencoded;
+				2. 如果设置为 multipart/form-data; 不会有boundary 服务器检测不到boundary会报错
+	</pre>
+
+	<input type="file" id="multiplefile" multiple  >
+	<button id="multiplebtn">多文件上传</button>
+
+	<pre>
+		多文件上传要额外注意一点：
+			文件不能以数组的形式传递，挨个append到FormData的同一个键中即可
+	</pre>
+
+	<script type="text/javascript">
+		var $singlefile = $("#singlefile"),
+			$multiplefile = $("#multiplefile"),
+			$singlebtn = $("#singlebtn"),
+			$multiplebtn = $("#multiplebtn")
+
+		// processData用于对data参数进行序列化处理，默认值是true。
+		// 为了把File原样发送出去，需要设为false
+		// 这个参数在XHR中并没有
+		$singlebtn.on('click', function(event) {
+			var form  = new FormData()
+			form.append('file', $singlefile[0].files[0])
+			$.ajax({
+				type: "post",
+				url: "http://localhost:8020/upload",
+				data: form,
+				processData: false,
+				contentType: false
+			}).success(function(message) {
+				console.log(message)
+			}).fail(function(err){
+				console.log(err)
+			})
+		})
+		
+		$multiplebtn.on('click', function(event) {
+			var form  = new FormData()
+			var files = $multiplefile[0].files
+			for (let i=0; i<files.length; i++) {
+				form.append('files', files[i])
+			}
+			$.ajax({
+				type: "post",
+				url: "http://localhost:8020/uploads",
+				data: form,
+				processData: false,
+				contentType: false
+			}).success(function(message) {
+				console.log(message)
+			}).fail(function(err){
+				console.log(err)
+			})
+		})
+	</script>
+</body>
+</html>
