@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>脚本加载时机</title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="./hello1.js" defer></script>
+	<script type="text/javascript" src="./hello2.js" defer></script>
+</head>
+<body>
+	
+	<pre>
+		延迟脚本: 只针对外部脚本，对内联脚本无效
+			1. 立刻下载脚本
+			2. 延迟到html标签结束执行
+			3. 按顺序执行
+			4. 在DOMContentLoaded之前执行，因此这个操作很像把脚本写在body的末尾
+
+	<script type="text/javascript">
+		console.log('main');
+		document.addEventListener('DOMContentLoaded',function(){
+		    console.log('main DOMContentLoaded');
+		})
+		window.onload = function() {
+			console.log('main loaded');
+		}
+	</script>
+</body>
+</html>

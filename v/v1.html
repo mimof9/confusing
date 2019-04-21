@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>脚本加载时机</title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="./hello1.js"></script>
+	<script type="text/javascript" src="./hello2.js"></script>
+</head>
+<body>
+	
+	<pre>
+		前置知识：
+			1. DOMContentLoaded和load事件的区别
+				document的DOMContentLoaded：HTML文档被完全加载和解析完成，而无需等待样式表、图像和子框架的完成加载
+				window的load：当一个资源及其依赖资源已完成加载时，将触发load事件
+			2. 所以，添加仅依赖于HTML元素本身的事件，在DOMContentLoaded中添加最为合适，
+				1. 之前添加，元素不存在
+				2. 更迟添加，会存在HTML元素显现，但是没有事件
+			3. 浏览器在遇到body标签时，才开始呈现内容
+	</pre>
+
+	<pre>
+		结论：
+		1. 脚本默认会按照书写顺序下载并执行，执行的时候阻塞html页面继续解析。
+		2. hello1.js 执行2秒 所以 页面会有2秒的白屏
+	</pre>
+
+	<script type="text/javascript">
+		console.log('main');
+		document.addEventListener('DOMContentLoaded',function(){
+		    console.log('main DOMContentLoaded');
+		})
+		window.onload = function() {
+			console.log('main loaded');
+		}
+	</script>
+</body>
+</html>
