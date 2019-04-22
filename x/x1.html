@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>js大整数精度丢失</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<pre>
+		js整数能保持精度的最大值为Math.pow(2,53) 不超过16位
+		因此 后端，如java的Long类型数据，在反序列化过程中，会丢失精度
+	</pre>
+
+	<pre>
+		解决方法：
+			1. 后端处理，后端把Long改为字符串
+			2. 前端处理
+				思路是在反序列化过程中，处理大整数
+				1. npm install json-bigint
+				2. 找到反序列化的位置
+					比如axios是，在选项中添加
+					transformResponse: [
+	                    function(data){
+	                        console.log('反序列化过程')
+	                        return JSONbig.parse(data)
+	                    }
+	                ]
+	</pre>
+</body>
+</html>
