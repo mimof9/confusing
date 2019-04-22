@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>通过flex居中</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		#p1 {
+			width: 200px;
+			height: 200px;
+			outline: 1px solid #ccc;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		#p1 #s1 {
+			width: 100px;
+			height: 100px;
+			outline: 1px solid #ccc;
+		}
+	</style>
+</head>
+<body>
+
+	<pre>
+		用弹性布局：
+			justify-content: center; 水平居中
+			align-items: center; 垂直居中
+
+			简单，并且对块级元素，内联元素都适用
+	</pre>
+
+	<div id="p1">
+		<div id="s1"></div>内联元素
+	</div>
+</body>
+</html>

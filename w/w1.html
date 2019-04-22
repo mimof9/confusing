@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>水平居中</title>
+	<style type="text/css">
+		#p1 {
+			width: 200px;
+			height: 200px;
+			outline: 1px solid #ccc;
+			text-align: center;
+
+		}
+ 		#p1 #s1	{
+			width: 100px;
+			height: 100px;
+			outline: 1px solid #ccc;
+			display: inline-block;
+			/*vertical-align: bottom;*/ /*内联元素的上下间隙，之前写过*/
+		}
+		#p1 #s2	{
+			width: 100px;
+			height: 100px;
+			outline: 1px solid #ccc;
+			margin: 0 auto;
+		}
+
+		#p2 {
+			width: 200px;
+			height: 200px;
+			outline: 1px solid #ccc;
+			line-height: 200px;
+		}
+		#p2 #s1 {
+			outline: 1px solid #ccc;
+		}
+
+		#p3 {
+			width: 200px;
+			height: 200px;
+			outline: 1px solid #ccc;
+			position: relative;
+		}
+		#p3 #s1 {
+			width: 100px;
+			height: 100px;
+			outline: 1px solid #ccc;
+			top: 0px;
+         	bottom: 0px;
+         	margin: auto 0;	/*相对父容器绝对定位 同时指定top和bottom 然后让上下外边距自适应*/
+         	position: absolute;
+		}
+	</style>
+</head>
+<body>
+
+	<pre>
+		水平居中：
+			内联元素：text-align: center; 在父容器设置
+			注意：控制元素的行内元素的水平对齐方式，如果是块级元素，不起作用。
+
+			块级元素：margin: 0 auto; 在自身设置
+
+		这两个水平居中的方式非常简单
+	</pre>
+
+	<div id="p1">
+		<div id="s1"></div>
+		<div id="s2"></div>
+	</div>
+
+	<pre>
+		垂直居中：
+			内联元素：line-height: 父容器高度; 在父容器设置
+			注意：要是单纯的内联元素，不要设置为内联块，否则会填充满父容器高度。
+
+		这是垂直居中很简单的方式
+	</pre>
+
+	<div id="p2">
+		<span id="s1">行内元素</span>
+		我也是行内的元素
+	</div>
+
+	<pre>
+		麻烦的是，块级元素的垂直居中：
+			思路基本都是：通过定位调整
+	</pre>
+
+	<div id="p3">
+		<div id="s1"></div>
+	</div>
+</body>
+</html>
