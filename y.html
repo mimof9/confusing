@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>函数柯里化</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	
+	<pre>
+		函数柯里化：
+			意义：创建一个函数固定下某些参数的版本，这样在调用的时候就可以省去那些参数
+		实现思路：
+			拼接函数参数，Array.concat
+	</pre>
+
+	<script type="text/javascript">
+		function add(a, b, c) {
+			console.log(a + b + c)
+		}
+
+		// 在Function原型上添加curry方法
+		Function.prototype['curry'] = function() {
+			// 把类数组参数转换为真数组
+			var slice = Array.prototype.slice,
+				args = slice.apply(arguments),
+				that = this
+			return function() {
+				var innerargs = slice.apply(arguments)
+				return that.apply(null, args.concat(innerargs))
+			}
+		}
+		
+		// 创建一个add前两个参数为1, 2的add函数，接下来调用只用传递第三个参数
+		var add12 = add.curry(1).curry(2)
+		add12(3)
+		add12(4)
+	</script>
+</body>
+</html>
