@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>文件下载</title>
+	<meta charset="utf-8">
+</head>
+<body>
+
+  <pre>
+    a标签可以实现文件下载，download属性
+      注意：
+        1. 对于浏览器可以识别的后缀，浏览器将直接显示，比如txt或图像文件
+      因此：
+        需要一种更安全的方式进行文件下载
+
+    思路是在前后端建立流。
+    后端：
+      通过reponse返回流
+    前端：
+      通过blob对象实现下载
+      https://blog.csdn.net/aydongzhiping/article/details/82462473
+
+    简书上的好文章
+    https://www.jianshu.com/p/cd3fee40ef59
+  </pre>
+
+	<script type="text/javascript">
+	  let xhr = new XMLHttpRequest()
+      let fileName = 'file.txt' // 文件名称 
+      xhr.open('GET', 'http://10.14.114.131:8081/fileDownload', true)
+      xhr.responseType = 'arraybuffer'
+      // xhr.setRequestHeader(token, 'xxxxx') // 请求头中的验证信息等（如果有）
+      xhr.onload = function() {
+      	console.log('返回结果')
+        if (this.status === 200) {
+          let type = xhr.getResponseHeader('Content-Type')
+ 
+          let blob = new Blob([this.response], {type: type})
+          if (typeof window.navigator.msSaveBlob !== 'undefined') {
+            /*
+             * IE workaround for "HTML7007: One or more blob URLs were revoked by closing
+             * the blob for which they were created. These URLs will no longer resolve as 
+             * the data backing the URL has been freed." 
+             */
+            window.navigator.msSaveBlob(blob, fileName)
+          } else {
+            let URL = window.URL || window.webkitURL
+            let objectUrl = URL.createObjectURL(blob)
+            if (fileName) {
+              var a = document.createElement('a')
+              // safari doesn't support this yet
+              if (typeof a.download === 'undefined') {
+                window.location = objectUrl
+              } else {
+                a.href = objectUrl
+                a.download = fileName
+                document.body.appendChild(a)
+                a.click()
+                a.remove()
+              }
+            } else {
+              window.location = objectUrl
+            }
+          }
+        }
+      }
+      xhr.send()
+	</script>
+
+</body>
+</html>
