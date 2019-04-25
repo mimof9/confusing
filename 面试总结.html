@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>前端面试</title>
+	<meta charset="UTF-8">
+	<style type="text/css">
+		* {
+			padding: 0;
+			margin: 0;
+		}
+		body {
+			font-size: 1.5rem;
+		}
+	</style>
+</head>
+<body>
+	<pre>
+		1.JS当中有哪些数据类型？
+		基本类型：Undefined Null Boolean Number String   
+		引用类型：Object
+		ES6新增：Symbol 不能用new操作符，因为它是基本数据类型
+		<script type="text/javascript">
+			let s = Symbol('s');
+			typeof s;
+		</script>
+
+		2.如何对这些数据类型进行判断？
+		typeof 上述7中数据类型，除了null返回'object'，其别都是和自身数据类型对应的。
+		typeof 是一元运算符，不是函数
+
+		3.如何判断object是哪一个具体的对象？比如说如何判断一个对象是数组？为什么存在跨iframe判断的问题？
+		判断null：obj === null
+		判断数组：
+			instanceof操作符
+			对象的constructor构造函数属性 
+			数组的isArray方法
+			Object原始引用类型的toString方法
+		因为iframe会有自己的window对象，每个window对象中Array函数不是同一个
+		<script type="text/javascript">
+			var arr = [11, 2, 3, 3, 11, 4, 333];	// 假设arr的初始化是在iframe中完成
+			console.log(arr instanceof Array);			// false
+			console.log(arr.constructor === Array);		// false
+			console.log(Array.isArray(arr));			// true
+			console.log(Object.prototype.toString.call(arr) === '[object Array]'); // true
+		</script>
+
+		4.数组有哪些方法？哪些方法会对原数组产生影响？
+		7个原地方法：
+			push pop shift unshift splice reverse sort
+		其他的都不影响原数组：
+			slice concat join 
+			indexOf/lastIndexOf
+			forEach map reduce/reduceRight filter every some
+
+		5.一个数组如何实现去重？
+		<script type="text/javascript">
+			// 利用indexOf判断是否存在，添加到新数组
+			function one(arr) {
+				if (Object.prototype.toString.apply(arr) === '[object Array]') {
+					let newArr = [];
+					for (let i=0; i<arr.length; i++) {
+						if (newArr.indexOf(arr[i]) === -1) {
+							newArr.push(arr[i]);
+						}
+					}
+					return newArr;
+				}
+			}
+			console.log(one(arr));
+			// splice原地去重
+			function two(arr) {
+				if (Array.isArray(arr)) {
+					for (let i=0; i<arr.length; i++) {
+						for (let j=i+1; j<arr.length; j++) {
+							if (arr[i] === arr[j]) {
+								arr.splice(j, 1);
+							}
+						}
+					}
+					return arr;
+				}
+			}
+			// console.log(two(arr));
+			// 对象属性不重复 需要考虑类型转换
+			function three(arr) {
+				if (Array.isArray(arr)) {
+					var obj = {},
+						newArr = [];
+					for (let i=0; i<arr.length; i++) {
+						obj[arr[i]] = 1;
+					}
+					for (let key in obj) {
+						newArr.push(key);
+					}
+					return newArr;
+				}
+			}
+			console.log(three(arr));
+			// 排序 删除相邻 原地
+			function four(arr) {
+				if (Array.isArray(arr)) {
+					arr.sort();
+					for (let i=arr.length; i>0; i--) {
+						if (arr[i] === arr[i-1]) {
+							arr.splice(i, 1);
+						}
+					}
+					return arr;
+				}
+			}
+			// console.log(four(arr));
+			// 利用Set集合和...扩展运算符
+			function five(arr) {
+				if (Array.isArray(arr)) {
+					return [...new Set(arr)];
+				}
+			}
+			console.log(five(arr));
+			// 数组的filter方法
+			function six(arr) {
+				if (Array.isArray(arr)) {
+					return arr.filter((item, index) => arr.indexOf(item) === index);
+				}
+			}
+			console.log(six(arr));
+		</script>
+
+		6.伪数组有哪些？怎么把一个伪数组转换成数组？
+		1.DOM选择器选出来的节点列表
+		2.函数的参数arguments对象
+		3.JQuery选择器选出来的也是伪数组
+		转换思路很正常，创建一个空数组，遍历伪数组，把每一项添加进空数组即可。
+		数组的slice源码基本就是这样实现的 
+			Array.prototype.slice.call(arguments);
+			[].slice.call(arguments); // 调用了数组原型上的slice方法 和上面的是一样的
+
+		7.数组问完了，很有可能问其他类型。字符串有哪些方法？
+		唯一能改变字符串变量的方式是+:
+			事实上，没有改变字符串，只是改变了变量的指向
+		全部不会改变原字符串，因为字符串是基本类型，不能改变
+			charAt charCodeAt
+			String.fromCharCode
+			indexOf/lastIndexOf
+			toString valueOf
+			split concat
+			slice substring substr
+			toLowerCase toUpperCase
+			localeCompare
+			match replace search
+		slice substring substr三者有什么区别：
+			主要是正负号的区别 slice两个参数可正可负 substring仅正数 substr(start, length)不是end
+
+		8.数字类型？如何判断一个东西是不是NaN? 判断是否为Infinity?
+		isNaN方法，不是判断是不是NaN 更准确的意思是 参数是否能转换为数字
+		看名字其实也知道 isNaN的意思是说 是否不是一个数字
+		正确的判断方法应该是：
+			1. 先判断是不是数字 typeof a === 'number'; // true
+			2. 在判断是不是NaN isNaN(a); // true
+		更简单的判断方式：
+			只有NaN不全等它自己，所以可以这么判断
+			o !== o;	// true 代表是NaN
+
+		使用es6的Object.is(val1, val2)。 判断结果符合逻辑，但是效率低。
+
+		全局isFinite方法，是否有限，但是，它会自动把参数转变为数字。
+		所以同样的道理，应该先判断是不是数字
+			1. typeof a === 'number';	// true
+			2. a !== a;  // false 判断不是NaN
+			3. isFinite(a);	// fasle
+		Number.isFinite方法 不会将参数转变为数字
+			所以：
+			1. a !== a;	// false;
+			2. Number.isFinite(a);	// false
+		<script type="text/javascript">
+			console.log(isNaN(1));	// false
+			console.log(isNaN('1'));	// false
+			console.log(isNaN());	// true
+			console.log(isNaN(''));	// false 空字符串转换成数字是0
+			console.log(isNaN({}));	// true
+			console.log(isNaN([]));	// false 空数组转换成数字是0
+			typeof NaN === 'number'; // true
+			console.log(isNaN(NaN)); // true NaN表示的意思就是不是一个数字
+			console.log(isNaN(Infinity));	// false
+
+			typeof Infinity === 'number';	// true
+			console.log(isFinite(NaN));	// false
+			Number.isFinite(NaN); // false
+			console.log(isFinite(Infinity));	// false
+
+			// es6的Object.is() 判断两个参数指是否相同 因此对象肯定是不同的
+			var o = {};
+			console.log(Object.is(o, o));	// true
+			console.log(Object.is(o, {}));	// false
+			console.log(Object.is(NaN, NaN));		// true
+			console.log(Object.is(Infinity, Infinity));	// true
+		</script>
+
+		9.Boolean布尔类型，哪些值转换成布尔类型是false？
+		只有6种，null, undefined, '', 0, -0, NaN
+		比较坑的：
+			[], {}, new Boolean(false) 都是true。根本原因在于对象转换成布尔值一定是true
+		<script type="text/javascript">
+			// false
+			console.log(!!null);		
+			console.log(!!undefined);
+			console.log(!!'');
+			console.log(!!0);
+			console.log(!!-0);
+			console.log(!!NaN);
+			// true
+			console.log(!![]);
+			console.log(!!{});
+			console.log(!!new Boolean(false));
+		</script>
+
+		10.new操作符的执行过程？ new操作符如果没有参数的时候 括号是否可以省略？（是可以的）
+		1.创建一个空对象
+		2.this指向这个空对象
+		3.运行构造函数
+		4.返回创建的对象
+		<script type="text/javascript">
+			function myNew(Func) {
+				var o = {};
+				Func.apply(o);
+				return o;
+			}
+		</script>
+
+		11.new操作符的返回值和构造函数的返回值有什么关系？
+		构造函数显示的返回返回值的话，分两种情况
+		1. 构造函数返回的是一个对象，那么最终结果以构造函数的返回值为准
+		2. 如果不是一个对象，那么以new操作符默认的返回值为准 
+
+		12.js种继承是如何实现的？
+		function Parent(name) {
+			this.name = name;
+		}
+		Parent.prototype.sayName = function() {
+			console.log(this.name)
+		}
+		原型链继承：只能继承原型上的属性，属性都是共享的，不能实现多继承，
+		Son.prototype = new Perent();
+		构造函数继承：在Son中把Perent的代码运行一遍，不能继承原型上的属性，属性不共享，占内存
+		function Son(name, age) {
+			Perent.call(this, name);
+			this.age = age;
+		}
+		组合式继承(伪经典继承)：两个问题
+		1，构造函数执行了两遍 
+		2.父类实例属性有一份多余的在子类原型中，虽然被覆盖了不影响使用
+		function Son(name, age) {
+			Perent.call(this, name);
+			this.age = age;
+		}
+		Son.prototype = new Perent();
+		原型式继承：直接继承对象，上述的都是讨论构造函数和原型链上继承，属于类型间的继承
+		function create(o) {
+			function F() = {};
+			F.prototype = o;
+			return new F();
+		}
+		寄生式继承：就是在原型式继承的基础上，对新对象进行增强。
+		组合寄生式继承(经典继承，完美继承)：
+		function Son(name, age) {
+			Perent.call(this, name);
+			this.age = age;
+		}
+		var sonPrototype = Object.create(Parent.prototype);
+		sonPrototype.constructor = Son;
+		Son.prototype = sonPrototype;
+
+		13.script标签上的两个属性 defer async的区别？
+		defer是延迟执行：
+		立刻并行下载，但是延迟到页面加载完毕才执行，按照书写顺序执行。
+		async是异步加载：浏览器空闲就会执行
+		立刻并行下载，下载完毕后立刻执行(不按照书写顺序去执行)。
+		1.JS代码的加载会阻塞页面的HTML渲染。
+		2.正常的JS下载都是同步的加载。
+		3.都是在window的load事件执行之前执行
+		这里可以继续讨论 script标签应该放在哪里？body标签的末尾
+		还可以继续深入问你 如何动态创建script标签
+
+		14.Promise对象是一个构造函数(注意，这句话一点毛病都没有，因为函数就是对象)
+		Promise对象代表一个异步操作，有三种状态：
+		1.pending 进行中
+		2.fulfilled 已成功
+		3.rejected 已失败
+		状态改变，只有两种可能：
+		1. pending 变为 fulfilled
+		2. pending 变为 rejected
+		使用Promise的步骤：
+		1. new一个Promise的对象, 参数是要异步执行的函数，这个函数接收两个参数，resolve, reject
+		2. 使用Promise对象, then()方法接收两个回调函数，成功和失败，失败的回调可以省略
+		3. catch方法是then(null/undefined, funtion(error))的简写，因此可以用.then().catch()来替代then
+		<script type="text/javascript">
+			var promise = new Promise(function(resolve, reject) {
+				var value = '我是异步操作的结果',
+					error = 404;
+				setTimeout(function() {	// 假装异步操作
+					if ('异步操作执行成功') {
+						resolve(value);	// pending变fulfilled 异步操作结果为value
+					} else {
+						reject(error); // pending变rejected 错误信息为error
+					}
+				}, 3000);
+			});
+			promise.then(function(value) {
+				console.log(value);
+			}, function(error) {
+				console.log(error);
+			});
+		</script>
+		页面上有多个Promise，怎么等到它们全都执行完毕？两种方法有什么差别：all方法和race方法 传入的都是Promise对象的数组，两者差别如下
+		// 同时执行p1和p2两个Promise，并在它们都完成后执行then:
+		// Promise.all([p1, p2]).then(function (results) {
+		//     console.log(results); // 获得一个Array: ['P1', 'P2']
+		// });
+		 
+		// 同时执行两个Promise，但是只获取先返回的结果 丢弃另一个
+		// Promise.race([p1, p2]).then(function (result) {
+		//     console.log(result); // 'P1'
+		// });
+
+		接着深入下去，then和catch的返回值是什么？为什么能够链式调用？显示在里面返回会怎么样？
+		返回值都是Promise实例，因此可以链式调用，不会有作用（后面的then或catch会立即执行）
+
+		Promise中异常的捕获是如何实现的，和try..catch有什么区别，Promise的模式有什么优势？
+		讲清楚Promise的工作原理，异步成功了怎么走，失败了怎么走。
+		优势在于Promise可以捕获异步下的异常，而try...catch不能。
+		比如说Ajax请求，如果用try...catch是捕获不了异常的，只能在Ajax回调里进行try...catch
+		对于Promise来说，按照正常流程捕获即可。
+
+		15.ES6中你工作中常用的东西有哪些？
+		1. import export 模块化导入导出
+			必须写在模块的顶层，不能写在作用域中。
+			export：
+				1. 直接在变量前加export
+				2. 统一用export {}; 导出
+			import：
+				语法： 
+					import {} from 'uri';
+					import * as newName from 'uri';
+				1. 在html的script标签下使用import语句 需要把script标签type改为module
+				2. import导入的都是const的变量 不允许修改
+				3. import 命令也会提升，因为import实在编译阶段执行的，在代码运行之前
+				4. import会执行加载的模块
+		2. 解构赋值
+			从数组和对象中提取值，对变量进行赋值
+			数组的解构赋值：
+			let [x, y = 3] = [1, 2];
+			对象的解构赋值：
+			let {name, age = 18} = {name: 'mimof', age: 25};
+			这里的=是指定默认值，所以函数的参数可以设置为{name, age = 18} 这样通过解构赋值就可以实现默认参数
+		3. let const
+			let 局部作用域
+			const 是常量
+		4. class async
+			class constructor static 仅是语法糖 set get方法
+		5. 函数的拓展：箭头函数 传参默认值 ...rest 双冒号的使用
+			箭头函数已经被用烂了。() => {}
+				箭头函数内部的this是词法作用域，由上下文确定(也就是调用它的是谁决定)。
+			传参默认值
+				ES5基本都使用 var name = name || '默认值'; 但是当name = 0或''也是默认值
+				ES6直接在形参后面添加= 默认值即可 var function(a = 1, b = '2'){} 
+			...rest可变参数
+				哪怕不传，也是空数组[]，传了就是多于出来的参数组成的数组
+			双冒号，函数绑定运算符
+				双冒号左边是一个对象，右边是一个函数。改运算符会自动将左边的对象，作为上下文环境（即 this 对象），绑定到右边的函数上面
+				obj::func;
+				// 等同于
+				func.bind(obj);
+				foo::bar(...arguments);
+				// 等同于
+				bar.apply(foo, arguments);
+		6. 字符串增加的方法(不重要，很容易自己写出来)，字符串模板`${}`很有用
+		7. 数组的方法（from of方法），扩展运算符...
+			把数组展开一层 ...[1, 2, 3]
+		8. 对象的拓展：属性的简洁表达式 解构赋值 is assign keys values entries方法
+			Object.is方法是判断那些很难判断的值的利器 比如 Infinity NaN +0 -0
+			Object.assign()用于对象的合并，后面对象的可枚举属性依此复制到前一个对象，后面对象的属性会覆盖前面的 所以可以看作一个渐进增强的过程 合并对象 克隆对象
+			Object.keys()/values()/entries() 都返回数组
+		9.Promise对象
+
+		16.项目中没法使用ES6，要写ES6，使用babel转换成ES5
+		babel主要是手动转码成ES5然后放浏览器跑 这样效率高，还有一点儿是@babel/polyfill不会改变Array.from
+		这种新增得到api，因为它不是语法，而是以polyfill的方式去在低版本兼容。
+		不光要知道可以把ES6转换成ES5，还要知道babel是怎么实现这个转换的，你有没有能力自己把ES6转换成ES5
+		比如let const在赋值的时候是怎么转换的
+			let是创建一个_开头的同名var变量替代，其实并不安全
+			const如果修改值的话 会提供一个错误函数
+		箭头函数是怎么转换的
+			直接转换成匿名函数
+		解构赋值和扩展是怎么转换的
+			解构赋值就是分开赋值var a = 1, b = 3;这样
+			扩展其实是调用了函数的apply方法，使用的是apply方法
+
+		17.箭头函数和普通函数有什么区别？
+		1.没有arguments对象
+		2.this的指向 继承自所在环境
+
+		18.事件是如何实现的？所谓如何实现，并不是问你源码，而是怎么去捕获绑定事件？
+		1.潜入DOM 在标签里写事件属性 问题：HTML和js耦合在一起
+		2.DOM0级 获取DOM元素 然后给元素的.onclick属性指定函数 问题：只能绑定一个事件处理程序
+		3.DOM2级 addEventListener
+		
+		事件的兼容性处理:
+		IE8及之前不支持addEventListener  IE11连Promise Symbol等ES6也不支持 Babel就要出场了。
+		<style type="text/css">
+			div	{
+				width: 100px;
+				height: 100px;
+				background: red;
+			}
+			p {
+				width: 100%;
+				background: green;
+				text-align: center;
+			}
+		</style>
+		<div></div>
+		<script type="text/javascript">
+			var div = document.getElementsByTagName('div')[0];
+			function doClick(event) {
+				console.log('you click');
+			}
+			if (div.addEventListener) {
+				div.addEventListener('click', doClick, false);
+				// div.removeEventListener('click', doClick, false);
+			} else if(div.attachEvent) {
+				div.attachEvent('onclick', doClick);
+				// div.detachEvent('onclick', doClick);
+			}
+		</script>
+
+		event.preventDefault(); // 阻止事件的默认行为，比如说点击超链
+		event.stopPropagation(); // 阻止事件传播，包括捕获和冒泡
+		这两个事件在IE8下也不支持，如何兼容？
+		event.returnValue = false;	// 取消事件的默认行为
+		event.cancelBubble = true;	// 取消事件冒泡，因为IE8下只有冒泡阶段
+		
+		事件委托是什么？
+		1. 讲清楚为什么要用事件委托，因为给每个DOM绑定一个事件很占村内并且也不容易控制
+		2. 借助事件流，在需要进行事件委托的一组元素的共同祖先上添加一个事件处理程序即可
+		3. 通过event.target.id来识别具体是哪个DOM促发了事件了 再进行处理
+
+		这就又引出来event.target和event.currentTarget的区别？
+		target是真正促发事件的那个最底层的DOM
+		currentTarget是事件流上当前被激活事件处理程序的那个DOM
+
+		事件流：从window开始 然后回到window
+		1. 捕获阶段
+		2. 目标阶段
+		3. 冒泡阶段
+		如果给一个DOM元素记载捕获阶段，又在冒泡阶段绑定了事件？执行顺序是怎么样的？
+		正常来讲，肯定是按照事件流的顺序
+			1.父节点捕获
+			2.子节点捕获
+			3.子节点冒泡
+			4.父节点冒泡
+		但是，如果事件处于目标阶段，这个调用顺序，取决于书写顺序。这句话很难理解，看下面的JS代码，
+		target是先执行冒泡还是先执行捕获，取决于书写顺序，currentTarget的肯定先执行捕获，再执行冒泡。
+		<div>父节点
+			<p>子节点</p>
+		</div>
+		<script type="text/javascript">
+			var div = document.getElementsByTagName('div')[1];
+			var p = document.getElementsByTagName('p')[0];
+			function doClick(event) {
+				console.log(this);
+			}
+			div.addEventListener('click', function(event) {
+				console.log('父节点 冒泡');
+			}, false);
+			p.addEventListener('click', function(event) {
+				console.log('子节点 冒泡');
+			}, false);
+			p.addEventListener('click', function(event) {
+				console.log('子节点 捕获');
+			}, true);
+			div.addEventListener('click', function(event) {
+				console.log('父节点 捕获');
+			}, true);
+		</script>
+
+		网络请求相关
+		19.http状态码分类，常见的状态码
+		1xx 信息
+		2xx 成功
+		3xx 重新向
+		4xx 客户端错误
+		5xx 服务端错误
+
+		100 继续
+		200 请求成功
+		301 永久移动，应该使用新的URI
+		302 临时移动，坚持使用原来的URI 
+		304 未修改，使用缓存
+		400 客户端语法错误
+		404 找不到资源
+		500 服务器内部错误
+		502 代理服务器收到无效响应
+		503 服务器超载，暂时不能处理请求
+		504 代理服务器请求超时
+
+		20.在浏览器输入一个URL，按下回车的全过程
+		1.输入地址，按下回车
+		2.浏览器发送请求
+		3.服务器返回响应
+		4.浏览器对响应结果进行渲染
+		详细一些：
+		浏览器查域名的IP地址，DNS解析，浏览器缓存，系统缓存，路由缓存。
+		浏览器向服务器发送HTTP请求
+		服务器会返回重定向响应
+		浏览器跟踪重定向响应，重新发送HTTP请求
+		服务器处理收到的请求，返回HTTP响应，响应包括HTML代码
+		浏览器接收到的HTML代码中可能会包含很多东西，js,css,音频，视频，图片。
+		浏览器开始渲染HTML，会涉及到异步请求发送，js解析等各种问题。
+		各种重定向的过程，走什么协议？
+
+		21.说到请求很容易就扯到跨域，各种跨域的方式和原理
+		跨域，可以细分一下：
+			1. 同一个页面 不同iframe
+			2. 不同窗口
+			3. 请求外域服务器上的资源
+
+		1.JSONP, 相当于直接运行了一个外域的JS
+			原理：script标签可以跨域请求数据
+			缺点：只能是GET请求，存在安全隐患
+		2.修改document.domain, 把需要跨域的页面嵌入到iframe中
+			原理：document.domain可以修改页面所在的子域
+		3.location.hash + window.onhashchange
+		4.window.name
+			原理：各个iframe都可以访问到其他的window，window.name支持2m的值
+		5.postMessage不止是跨域 甚至是两个窗口之间的跨域
+			1.第一个参数数据，虽然可以是任意类型，但是浏览器只实现了字符串，因此用JSON.stringify最好
+			2.第二个参数要包含 协议：//主机：端口号
+				* 所有域
+				/ 当前的窗口同源
+		6.CORS 需要服务端来进行处理
+			如果需要带cookies的时候，前端也需要处理,前端的XHR的withCredentials属性设置为true
+		7.nginx反向代理 做一个代理服务器
+		8.使用node做中间件服务器
+			原理：因为同源策略只是浏览器的安全策略，不是HTTP的要求。
+		9.WebSocket 原生js方法写起来比较麻烦 socket.io.js框架比较简单
+		10. image跨域
+			问题：只能发送信息
+
+		回答问题要有逻辑：
+		cookie： 
+			1. cookie的业务场景 保存登陆状态 这个流程
+			2. 主要字段 什么时间销毁 最大容量 是否安全
+		name　　字段为一个cookie的名称。
+		value　　字段为一个cookie的值。
+		domain　　字段为可以访问此cookie的域名。
+		非顶级域名，如二级域名或者三级域名，设置的cookie的domain只能为顶级域名或者二级域名或者三级域名本身，不能设置其他二级域名的cookie，否则cookie无法生成。
+		顶级域名只能设置domain为顶级域名，不能设置为二级域名或者三级域名，否则cookie无法生成。
+		二级域名能读取设置了domain为顶级域名或者自身的cookie，不能读取其他二级域名domain的cookie。所以要想cookie在多个二级域名中共享，需要设置domain为顶级域名，这样就可以在所有二级域名里面或者到这个cookie的值了。
+		顶级域名只能获取到domain设置为顶级域名的cookie，其他domain设置为二级域名的无法获取。
+		path　　字段为可以访问此cookie的页面路径。 比如domain是abc.com,path是/test，那么只有/test路径下的页面可以读取此cookie。
+		expires/Max-Age 　　字段为此cookie超时时间。若设置其值为一个时间，那么当到达此时间后，此cookie失效。不设置的话默认值是Session，意思是cookie会和session一起失效。当浏览器关闭(不是浏览器标签页，而是整个浏览器) 后，此cookie失效。
+		Size　　字段 此cookie大小。
+		http　　字段  cookie的httponly属性。若此属性为true，则只有在http请求头中会带有此cookie的信息，而不能通过document.cookie来访问此cookie。
+		secure　　 字段 设置是否只能通过https来传递此条cookie
+
+		关于浏览器缓存的问题？思路我觉得应该是开发过程中，可能因为缓存，你就很痛苦。
+			1. Cache-Control: 
+			2. ETag/If-None-Match | LastModified/If-Modified-Since
+			第一个方面：Cache-Control没有过期的话，连请求都不会发送，直接使用缓存
+			第二个方面：缓存过期，发送请求服务器，让服务器判断资源是否更改过，决定返回200还是304
+			两个方面的具体实现：
+				1. max-age字段 no-cache no-store 具体讲讲差别
+				2. ETag是唯一资源标识符 通过这种机制来判断的话 比LastModified要准确
+			最后要清楚，是不是所有请求都可以缓存？
+				那肯定不是的，
+				POST请求，带cookie的请求，没有提供上述缓存字段的响应。
+
+		HTTPS和HTTP的区别
+		HTTP + 加密 + 认证 + 完整性校验 = HTTPS （这个S是指SSL/TLS） TLS是基于SSL3.0的 所以统称为SSL没有问题的
+		加密可以分为对整个通信的加密 使用SSL 
+			原理：公钥（非对称）加密 交换 共享（对称）加密的密钥，然后使用共享加密来加密通信
+			SSL相当于把HTTP整个通信过程保护了起来，之前HTTP直接走TCP，但是HTTPS要使用SSL，再走TCP
+		认证：主要是解决身份的问题，也就是说确认一个服务器是我认为的那个服务器。肯定不能去自证明，目前的
+			做法是有公信力第三方组织去颁发这些证书。SSL在建立通信的时候，会验证这些证书，就可以进行认真。
+		完整性校验：确保获取的数据不会被篡改，防止中间人攻击。
+			以下载为例，用压缩算法MD5或SHA1去获得签名，然后放在网上，下下来对比。
+		HTTPS和HTTP的使用时机，HTTPS慢，当不涉及到一个需要保密的数据的时候，用HTTP会比较好。
+
+		XSS攻击：
+			本质原因：完全信任了用户的输入，导致执行了用户的脚本，标签等
+			通常方式是嵌入一段远程或者第三方域上的JS脚本，在目标网站的作用域下执行了这段脚本
+			本质上是由于script可以跨域加载的天性，然后通过XSS漏洞，可以让别人的网站被动执行我的脚本
+			1.反射型XSS，用户输入JS脚本或者html标签，服务器接收到这些后，原样返回给前端，就会执行脚本
+			2.存储型XSS，服务器接收到脚本之后，存到了数据库里，其他用户访问的时候，会执行脚本，典型的就是留言
+			以盗取cookie为例
+				1.黑客在留言板里面写下document.cookie这种脚本 并且会发往自己的服务器
+				2.服务器接收到这段脚本给保存在了数据库
+				3.其他用户查看留言的时候，访问到了黑客的这个留言，那么就会执行脚本把自己的cookie发往服务器
+		获取了你的cookie之后，如果cookie没有进行domain/path的验证，很容易就可以在未经你许可的情况下用你的名义发送恶意请求
+			防御：
+				1.过滤script img a 这类标签 要考虑大小写
+				2.对特殊字符进行编码 一般来说<>这两个就够了
+				3.对用户的输入进行验证，长度，英文，数字等， 用正则验证。
+
+		CSRF攻击：跨站请求伪造 就是未经你许可的情况下用你的名义发送恶意请求
+			本质原因：http本身没有验证身份的能力，我们使用cookie去验证，但是cookie最多只能说明是某个浏览器
+			发送的，至于是不是用户本人的意愿，是没办法知道的。
+			其实例子也是非常简单的。比如说，
+			1. 你和黑客都上同一个网站，黑客知道了这个网站的一个接口功能，比如说加关注
+			2. 黑客写一篇博客，然后在里面放一张图片，src=加关注的接口
+			3. 当你登陆了这个网站的时候，看到黑客的这篇文章，由于加载图片，你就自动关注了黑客
+			防御：
+				1.不用GET。用POST，因为POST需要用户去操作，这样黑客暴露的可能性会高
+				2.现在业界通用的做法是在服务端生成一个随机生成Token，保存在cookie中，
+					发送请求的时候验证Token是否匹配。
+
+		思考：从Token的机制就可以看出来，CSRF的防御前提是，cookie的安全的，那么cookie安全需要做XSS防御。
+			当然，cookie可以直接设置httpOnly。
+			从面试角度来说，要能在面试官问其中一个的时候，说出两者的关联。
+
+		Promise: 解决了什么问题？通过链式调用解决了回调地狱，可读性更好
+			Promise并没有取消控制反转，而是把反转出去的控制再反转一次，也就是反转了控制反转。
+			这种机制有点像事件的触发。它与普通的回调的方式的区别在于，普通的方式，回调成功之后的操作直接写在了回调函数里面，而这些操作的调用由第三方控制。在Promise的方式中，回调只负责成功之后的通知，而回调成功之后的操作放在了then的回调里面，由Promise精确控制。
+			Promise有这些特征：只能决议一次，决议值只能有一个，决议之后无法改变。任何then中的回调也只会被调用一次。Promise的特征保证了Promise可以解决信任问题。
+			
+			Promise和setTimeout执行的顺序？
+			promise是微任务，setTimeout是宏任务。
+		感觉自己在JS的事件循环上还有漏洞
+		关于事件循环呢？ 我觉得应该更宏观的去考虑。
+			1. js的宿主有两个 浏览器和node。 但是js语言的es标准部分和宿主部分还是要清楚得区分。
+				真正执行有能力执行js代码得是js引擎，而不是宿主，我们指是通过宿主去使用了js引擎。
+				这个关系，很像 用户，操作系统和计算机硬件接口的关系。
+			2. Promise是es内置原生对象，setTimeout是浏览器api。 
+			3. js引擎在面对Promise和setTimeout这两种来源是，是不一样的。
+				Promise产生的是引擎级的微观任务，这是因为Promise具体该怎么处理，是js引擎才知道的。
+				setTimeout是宿主级的宏观任务。它是由宿主告诉引擎，过多久之后，再把任务添加到宏观队列。
+
+		js面向对象：
+			1. 面向对象的实现方式有很多，基于类是最出名的，但不是唯一的。
+			2. js使用的是基于原型的方式去实现面向对象。
+			3. 面向对象最重要的特征就是，封装，继承，多态。
+				但是我觉得最重要的是复用，js实现复用的手段就是原型链，通过原型链查找对象属性的机制，
+				实现了代码复用。理解js如何在一个对象上查找属性才是理解js对象的关键。
+		js对象：
+			1. 对象要有唯一标志，状态，行为。 c++成员变量，成员方法 java属性，方法
+			2. js只用属性。 所以属性会有一组特征值[[私有属性]]来描述。属性分为数据属性和访问器属性。
+
+
+		腾讯：
+			异步请求有哪些方式？
+			请求有哪些method？ head和options有什么作用 post和get区别
+			异步请求是否能够跨域？
+			怎么实现跨域？
+			http有哪些状态码？
+			304缓存具体是怎么实现的？
+			csrf，xss的基本概念 攻击原理 防御措施 和区别 注意 都是跨站
+			前端性能优化
+			vue的数据绑定具体是怎么实现的？
+			cookie和localstorage和sessionStorage有什么区别？
+			手机端如何调试？？
+			浏览器缓存机制？
+			http和https区别
+			
+		某厂
+		3.16 晚上电话一面（50分钟）
+		问题 
+		描述下原型链
+		js作用域
+		闭包
+		垃圾回收
+		如何读取对象属性不在原型链上找
+		cookie一些属性
+		浏览器缓存
+		http和https协议
+		同源策略、跨域解决办法
+		web安全XSS CSRF怎样产生、如何防范。具体转义哪些字符
+		你觉得的自己优点和缺点
+		平时怎么学前端
+		一小时后电话二面并约了写代码（28分钟） 
+		讲项目和遇到的难点
+		imutable.js实现原理
+		Promise解决了什么问题、如何使用ES5实现
+		3.19在线写代码（60分钟共享桌面）
+
+		题目一：页面内的一个input输入框，实现查询命中数组中的词，和输入过程中的autocomplete效果
+		题目二：实现一个div滑动的动画，由快至慢5s结束
+		3.20 电话三面（50分钟）
+
+		自我介绍
+		项目、为什么选择用react而不用vue
+		js继承
+		webpack怎样热更新
+		webpack怎样处理跨域
+		babel原理
+		pm2有哪些启动模式、常用配置项？gg
+		react的优点
+		设计模式：观察者模式、单例模式。其它还知道啥
+		react组件间通信
+		react diff算法优点和缺点、virtualDom
+		node进程间通信。挂了怎么办
+		linux常见命令、日志。
+		怎么学前端、上什么网站比较多
+
+		三面问的内容应该是最有深度的了。
+
+		3.21笔试（60分钟）
+
+		面试官邮件甩了几道题。60分钟完成。
+		正则判断url的正确性
+		实现至少一种随机打乱数组的方法，计算出其时间复杂度和空间复杂度
+		书写一次POST请求过程可能的HTTP请求报文和响应报文
+		假设你有一个函数，产生[0, 5)之间的随机整数，每个数字概率1/5，如何使用这个函数产生[0, 7)之间的随机整数，每个数字概率1/7
+		现在有一个基准数组 records，先要求你维护其子集 selection 数组（初始为空），维护操作包含删除和插入。
+
+		插入：给定 records 数组中的一个元素，插入到 selection 中
+
+		删除：给定 records 数组中的一个元素，把它从 selection 中删除
+
+		现在要求你： 
+		实现 insert() 和 remove() 方法来实现以上操作。 
+		设计一个算法，保证每次维护操作后，保持 selection 数组中的元素的偏序关系与 records 数组中的保持一致，分析你算法的复杂度。
+
+		3.22 电话四面（18分钟） 
+		浏览器输入URL发生了什么
+		DNS查询时怎样的
+		TCP三次握手的过程
+		http报文一些知识
+		cookie
+		CSRF
+		职业规划
+		总的来说，该前端面试覆盖的内容还是相当广的，而且非常注重基础（这应该是大厂的一贯风格）。计算机基础课程操作系统、数据结构、计算机网络必须非常扎实，然后前端css、js、框架原理源码和node都要熟悉或者有一定了解，还要对前端的新发展有一定了解。
+
+		3-28 HR面
+
+		漫长的等待终于来了HR面。HR面的时间不长。
+
+		自我介绍。
+		愿意来深圳工作吗？
+		父母做什么的
+		自己的优点和缺点
+		非科班为什么选择了前端
+		聊天还是很愉快的，基本上按照自己的情况真实说出来就行了。
+
+		4-2 录取通知
+
+		下课上课的时候，看见看到是深圳那边的电话来了，马上就跑出了教室，是导师打电话告诉自己实习被录取了。当时真的巨开心（当然后面还是好好努力争取转正）。
+
+		4.4 HR电话正式发放offer
+
+		一切苦尽甘来吧，前端之路漫漫长，仍需继续努力。
+
+		波老师系列：
+		
+		js中每个函数调用都会有自己的执行上下文
+
+		函数调用栈很好理解：
+
+		栈底，永远是全局执行上下文。
+		执行一个函数的时候，这个函数要产生自己的执行环境，官方说法叫做执行上下文，
+		执行上下文包括变量对象，作用域链和this，
+		当函数执行完毕的时候，执行上下文会退栈，
+		但是，变量对象不一定退栈(典型的就是闭包，变量对象被引用，不会清除)
+
+		变量对象的创建过程要牢记：
+		1.创建阶段 完美解答变量提升的问题
+			1. 创建arguments对象
+			2. 在变量对象中添加函数声明的属性 值为函数引用
+			3. 在变量对象中添加变量声明的属性 值为undefined （如果和函数同名则跳过）
+
+		2.执行阶段 这里 变量对象转变为活动对象
+			1. this在执行时才绑定
+			2. 顺序执行代码，这里才能给局部变量赋值
+
+
+		要很好的区分函数调用栈和作用域链。
+	</pre>
+</body>
+</html>
