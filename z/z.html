@@ -20,7 +20,9 @@
       通过blob对象实现下载 blobURL
       https://blog.csdn.net/aydongzhiping/article/details/82462473
 
-    用axios请求，图片就出错？？
+    用axios请求：
+      要注意，responseType 不能用headers设置，否则不起作用。
+      还要弄清楚什么时候发送OPTIONS请求
 
     简书上的好文章
     https://www.jianshu.com/p/cd3fee40ef59
@@ -28,45 +30,119 @@
 
 	<script type="text/javascript">
 	  let xhr = new XMLHttpRequest()
-      let fileName = 'file.txt' // 文件名称 
-      xhr.open('GET', 'http://10.14.114.131:8081/fileDownload', true)
-      xhr.responseType = 'arraybuffer'
-      // xhr.setRequestHeader(token, 'xxxxx') // 请求头中的验证信息等（如果有）
-      xhr.onload = function() {
-      	console.log('返回结果')
-        if (this.status === 200) {
-          let type = xhr.getResponseHeader('Content-Type')
- 
-          let blob = new Blob([this.response], {type: type})
-          if (typeof window.navigator.msSaveBlob !== 'undefined') {
-            /*
-             * IE workaround for "HTML7007: One or more blob URLs were revoked by closing
-             * the blob for which they were created. These URLs will no longer resolve as 
-             * the data backing the URL has been freed." 
-             */
-            window.navigator.msSaveBlob(blob, fileName)
-          } else {
-            let URL = window.URL || window.webkitURL
-            let objectUrl = URL.createObjectURL(blob)
-            if (fileName) {
-              var a = document.createElement('a')
-              // safari doesn't support this yet
-              if (typeof a.download === 'undefined') {
-                window.location = objectUrl
-              } else {
-                a.href = objectUrl
-                a.download = fileName
-                document.body.appendChild(a)
-                a.click()
-                a.remove()
-              }
-            } else {
+    let fileName = 'file.txt' // 文件名称 
+    xhr.open('GET', 'http://10.14.114.131:8081/fileDownload', true)
+    xhr.responseType = 'arraybuffer'
+    // xhr.setRequestHeader(token, 'xxxxx') // 请求头中的验证信息等（如果有）
+    xhr.onload = function() {
+    	console.log('返回结果')
+      if (this.status === 200) {
+        let type = xhr.getResponseHeader('Content-Type')
+
+        let blob = new Blob([this.response], {type: type})
+        if (typeof window.navigator.msSaveBlob !== 'undefined') {
+          /*
+           * IE workaround for "HTML7007: One or more blob URLs were revoked by closing
+           * the blob for which they were created. These URLs will no longer resolve as 
+           * the data backing the URL has been freed." 
+           */
+          window.navigator.msSaveBlob(blob, fileName)
+        } else {
+          let URL = window.URL || window.webkitURL
+          let objectUrl = URL.createObjectURL(blob)
+          if (fileName) {
+            var a = document.createElement('a')
+            // safari doesn't support this yet
+            if (typeof a.download === 'undefined') {
               window.location = objectUrl
+            } else {
+              a.href = objectUrl
+              a.download = fileName
+              document.body.appendChild(a)
+              a.click()
+              a.remove()
             }
+          } else {
+            window.location = objectUrl
           }
         }
       }
-      xhr.send()
+    }
+    xhr.send()
+
+    // let xhr = new XMLHttpRequest()
+    // xhr.open('GET', `http://localhost:8090/attachlist/?url=${url}`, true)
+    // xhr.responseType = 'arraybuffer'
+    // // xhr.setRequestHeader(token, 'xxxxx') // 请求头中的验证信息等（如果有）
+    // xhr.onload = function() {
+    //     if (this.status === 200) {
+    //         console.log(this.response)
+    //         let type = xhr.getResponseHeader('Content-Type')
+    //         let blob = new Blob([this.response], {type: type})
+    //         if (typeof window.navigator.msSaveBlob !== 'undefined') {
+    //             window.navigator.msSaveBlob(blob, fileName)
+    //         } else {
+    //             let URL = window.URL || window.webkitURL
+    //             let objectUrl = URL.createObjectURL(blob)
+    //             if (fileName) {
+    //                 var a = document.createElement('a')
+    //                 // safari doesn't support this yet
+    //                 if (typeof a.download === 'undefined') {
+    //                     window.location = objectUrl
+    //                 } else {
+    //                     a.href = objectUrl
+    //                     a.download = fileName
+    //                     document.body.appendChild(a)
+    //                     a.click()
+    //                     a.remove()
+    //                 }
+    //             } else {
+    //                 window.location = objectUrl
+    //             }
+    //         }
+    //     }
+    // }
+    // xhr.send()
+    this.$axios({
+        method: 'get',
+        url: `http://localhost:8090/attachlist/?url=${url}`,
+        // data: JSON.stringify({
+        //     'url': url
+        // }),
+        // data: url,
+        responseType: 'arraybuffer'
+        // headers: {
+        //     'Content-Type': 'application/json',
+        // }
+    }).then(response => {
+        // let type = response.getResponseHeader('Content-Type')
+        console.log(response)
+        console.log(response.headers['content-type'])
+        let blob = new Blob([response.data], {type: response.headers['content-type']})
+        if (typeof window.navigator.msSaveBlob !== 'undefined') {
+            window.navigator.msSaveBlob(blob, fileName)
+        } else {
+            let URL = window.URL || window.webkitURL
+            let objectUrl = URL.createObjectURL(blob)
+            if (fileName) {
+                var a = document.createElement('a')
+                // safari doesn't support this yet
+                if (typeof a.download === 'undefined') {
+                    window.location = objectUrl
+                } else {
+                    a.href = objectUrl
+                    a.download = fileName
+                    document.body.appendChild(a)
+                    a.click()
+                    a.remove()
+                }
+            } else {
+                window.location = objectUrl
+            }
+        }
+    }).catch(error => {
+        console.log(error)
+    })
 	</script>
 
 </body>
