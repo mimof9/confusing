@@ -33,3 +33,6 @@
 - 接收的后端数据，id对不上？[x文件夹](./x)
 - 函数柯里化有什么意义？[y.html](./y.html)
 - 下载文件怎么做？[z文件夹](./z)
+- package.json的dependence到底有什么有？今天拉下来代码发现使用了import，
+		但是在package.json中并没有引入，安装好模块后发现项目可以正常运行。
+		npm install vue-pdf 默认在package.json中引入了，但是删除掉，发现可以运行。
