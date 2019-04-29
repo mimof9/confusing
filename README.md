@@ -24,7 +24,7 @@
 - html的编解码？和uri的区别？[o.html](./o.html)
 - js的三大事件的执行流程？鼠标事件，键盘事件，html事件？[p文件夹](./p)
 - css过渡效果，动画总是记不住，所以探究其思想[q文件夹](./q)
-- 箭头函数的this，不弄明白用起来很不放心！[r.html](./r.html)
+- 箭头函数的this，undefined的this, setTimeout的this！[r.html](./r.html)
 - html和text，傻傻分不清？[s.html](./s.html)
 - vue事件处理和父子组件通信[t文件夹](./t)
 - 多文件上传的正确姿势[u文件夹](./u)
