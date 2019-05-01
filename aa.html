@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>函数的call, apply, bind</title>
+	<meta charset="utf-8">
+</head>
+<body>
+
+	<pre>
+		前置知识1：
+
+		关于函数的call, apply, bind方法就是指定函数执行时的this
+
+		1. call
+			参数1：this绑定的对象
+			参数2：参数数组
+		2. apply
+			参数1：this绑定的对象
+			参数3：一个一个的参数
+		3. 不是执行参数，而是返回一个绑定了this的函数
+	</pre>
+
+	<script type="text/javascript">
+		function helloA() {
+			console.log(this.a)
+		}
+		a = 10
+		var obj = {
+			a: 100
+		}
+
+		helloA()
+		helloA.call(obj)
+		var helloAObj = helloA.bind(obj)
+		helloAObj()
+	</script>
+
+	<pre>
+		前置知识2：
+
+		数组的切片方法：Array.prototype.slice(start[, end])
+		start不写默认为0
+	</pre>
+
+	<pre>
+		前置知识3：
+
+		伪数组：可以使用[index]获取内容，有length属性，但不是Array
+			1. 函数参数arguments
+			2. js选出来的一系列DOM节点 document.getElementsByTag这种
+			3. jq选出来的一些列DOM节点
+	</pre>
+
+	<pre>
+		所以就有了把伪数组转换成真正数组的需求。
+
+		最直观的想法是：
+			1. 创建一个空Array
+			2. 因为伪数组有length并且可以根据index访问，所以可以遍历它
+			3. 遍历伪数组，添加进新数组
+
+		var args = []
+		for (let i = 1; i < arguments.length; i++) {
+			args.push(arguments[i])
+		}
+	</pre>
+
+	<pre>
+		前置知识4：
+
+		函数有两个默认的参数，arguments和this，都是在函数执行前创建执行上下文的过程中确定的。
+		因此，配合call,apply这种方式，就可以动态指定真正执行函数时，this的指向。
+
+		事实上，这种延迟绑定this的方式，不仅仅赋予了函数的多态性；
+		换个角度去看，可以理解为让不具备每种方法的对象去执行该方法的能力。
+	</pre>
+
+	<pre>
+		结合前面的知识：
+		Array.prototype.slice.call(arguments)就可以理解了，
+		以arguments为this执行数组原型的slice方法，start和end参数都为undefined。
+
+		再进一步去看：
+		[]就是一个空数组对象，它的slice方法其实就是在原型链上的Array.prototype的slice方法
+		因此可以更进一步的写成：
+		[].slice.call(arguments)
+	</pre>
+</body>
+</html>
