@@ -45,5 +45,56 @@
 		add12(3)
 		add12(4)
 	</script>
+
+	<pre>
+		无限参数柯里化
+		// 实现一个add方法，使计算结果能够满足如下预期：
+		add(1)(2)(3) = 6;
+		add(1, 2, 3)(4) = 10;
+		add(1)(2)(3)(4)(5) = 15;
+
+		分析:
+		add得接受不定参数 并且要返回一个函数继续收集参数和前面的结果进行计算。
+		仔细想一下，这个过程特别像数组的reduce方法
+	</pre>
+
+	<script type="text/javascript">
+		function add() {
+			var _args = [].slice.call(arguments)
+
+			// 内部申明一个函数，使用闭包拼接参数
+			var adder = function() {
+				var _adder = function() {
+					_args.push(...arguments)
+					return _adder // 这样就又返回自己这个闭包
+				}
+
+				_adder.toString = function() {
+					return _args.reduce(function(a, b) {
+						return a + b
+					})
+				}
+
+				return _adder
+			}
+
+			return adder(..._args)
+		}
+
+		// 参与数值计算的时候 值为
+		add(1)(2)(3)	//6
+		add(1, 2, 3)(4)	// 10
+		add(1)(2)(3)(4)(5)	//15
+
+	</script>
+
+	<pre>
+		仔细看，思路其实不难，但是实现起来，非常有技巧性。
+
+		参数保存在_args数组中，内部写一个函数adder进行参数的搜集。
+		最后，根据函数参与计算时使用valueOf和toString值的性质，对_args进行reduce
+
+		换句话说，就是用数组搜集参数，最后在隐式转换的时候利用reduce相加
+	</pre>
 </body>
 </html>
