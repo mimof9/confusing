@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>正则电话号码邮箱的最佳实践</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<pre>
+		第一步先将如何写电话号码的正则和邮箱的正则
+
+		电话号码的规则很简单：
+		第一位1
+		第二位3, 4, 5, 7, 8
+		后面9位随意
+		/^1[34578]\d{9}$/
+
+		邮箱的规则网上有很多都很复杂：这里给出一个简单的基础
+		/^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/.
+	</pre>
+
+	<script type="text/javascript">
+		function checkPhone(phoneNumber) {
+			return /^1[34578]\d{9}$/.test(phoneNumber)
+		}
+
+		function checkEmail(email) {
+			return /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/.test(email)
+		}
+	</script>
+
+	<pre>
+		之后可能还会检测各种各样的合法性，每次都这样写很累。
+		因此可以考虑使用函数柯里化:
+
+		var _check = createCurry(check);
+
+		var checkPhone = _check(/^1[34578]\d{9}$/);
+		var checkEmail = _check(/^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/);
+	</pre>
+
+	<script type="text/javascript">
+		// 这样封装 没有从根本上解决问题 每次依然要传递字符串
+		function check(targetString, reg) {
+		    return reg.test(targetString);
+		}
+	</script>
+</body>
+</html>
