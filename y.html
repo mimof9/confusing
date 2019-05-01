@@ -24,6 +24,7 @@
 	</pre>
 
 	<script type="text/javascript">
+		// 不通用的 仅用作理解
 		function add(a, b, c) {
 			console.log(a + b + c)
 		}
@@ -44,6 +45,24 @@
 		var add12 = add.curry(1).curry(2)
 		add12(3)
 		add12(4)
+	</script>
+
+	<script type="text/javascript">
+		function createCurry(func, args) {
+			var argslen = func.length
+			var args = args || []
+
+			return function() {
+				var _args = [].slice.call(arguments)
+				[].push.apply(_args, args) // 对push的要正确的理解，传数组插入的就是一个数组
+
+				if (_args.length < argslen) {
+					return createCurry,call(null, func, _args)
+				}
+
+				return func.call(null, _args)
+			}
+		}
 	</script>
 
 	<pre>
