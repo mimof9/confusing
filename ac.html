@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>new到底做了什么</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<pre>
+		经典会告诉我们new做了四件事：
+		1. 创建一个空对象
+		2. 把this指向这个对象
+		3. 使用这个this执行构造函数
+		4. 返回这个对象
+
+		大体上是对的，可以更精炼一些：
+		1. 创建一个空对象
+		2. 以这个对象作为this，执行构造函数
+		3. 返回这个对象
+
+		我自己之前也是这样理解的，但是为了真正实现一个new函数，还要考虑三个问题：
+			1. 创建出来的对象，原型链忘了设置
+			2. 如果构造函数中显式返回了对象，取消默认的返回
+			3. 构造函数参数的处理
+	</pre>
+
+	<script type="text/javascript">
+		function New(func) {
+			// 创建空对象
+			var obj = {}
+			// 设置原型链，解决了问题1
+			if (func.prototype !== null) {
+				obj.__proto__ = func.prototype
+			}
+			// 以空对象为this执行构造函数，解决了问题3
+			var res = func.apply(obj, [].slice.call(arguments, 1))
+			// 如果构造函数返回了对象
+			if ((typeof res === 'object' || typeof res === 'function') && res !== null) {
+				return res
+			}
+			// 默认返回的对象
+			return obj
+		}
+	</script>
+
+	<pre>
+		要区分new操作符和我们写的New函数的区别。
+		new操作符 可以得到它的操作数，这种语言级别的能力，我们是没办法通过函数去实现的。
+	</pre>
+</body>
+</html>
