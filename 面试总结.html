@@ -812,6 +812,24 @@
 		    	}
 		    })(i), i*1000 );
 		}
+
+		// in关键字可以判断对象是否有某个属性，不管是在对象上还是原型上。
+		最常用的应用场景是判断当前页面是否在移动端打开。
+		换句话说，就是能力检测。
+		isMobile = 'ontouchstart' in document
+
+		能力检测是处理兼容性的法宝，举个具体例子，检测不同浏览器对transform属性的支持(当然，现在基本都
+		支持标准的transform了)
+		function getTransform() {
+			var divStyle = document.getElementsByTagName('div')[0].style
+			var transformArr = ['transform', 'webkitTransform', 'MozTransform', 'msTransform', 'OTransform']
+
+			for (let i=0; i< transformArr.length; i++) {
+				if (transformArr[i] in divStyle) {
+					console.log(transformArr[i])
+				}
+			}
+		}
 	</pre>
 </body>
 </html>
