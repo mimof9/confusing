@@ -46,6 +46,10 @@
 			css中指定style属性，是不能够用node.style.width获取, 除非后续自行设置了
 
 		结论：初次获取元素宽高，使用offsetWidth可以保证获取到宽高。
+
+		在这个基础上，还需要更深一步了解。window.getComputedStyle(node[,伪类])获取CSSStyleDeclaration对象(这个对象会实时更新，也就是css属性改变，它会自动更新)。
+		这个对象包含了在css中定义的属性，那些你没有定义的，也都有默认值。
+		所以可以使用它去获取初始css中的初始宽高
 	</pre>
 
 	<script type="text/javascript">
@@ -53,6 +57,12 @@
 			div2 = document.getElementById('div2'),
 			div3 = document.getElementById('div3'),
 			div4 = document.getElementById('div4');
+		var cssstyle = window.getComputedStyle(div1)
+		console.log(cssstyle.width)
+		// console.log(cssstyle.transform)
+		// var temp = cssstyle.transform.match(/-?\d+/g) // -?表示这个数可能是负数
+		// console.log(temp[4].trim())
+		// console.log(temp[5].trim())
 
 		console.log(div1.width, div1.style.width);
 		console.log(div1.clientWidth, div1.offsetWidth, div1.scrollWidth);
@@ -65,6 +75,8 @@
 			div4.style.width = '200px';
 			console.log(div4.width, div4.style.width);
 		};
+
+
 	</script>
 </body>
 </html>

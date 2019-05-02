@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>拖拽对象</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		div {
+			width: 100px;
+			height: 100px;
+			background: #ccc;
+			transform: translate(200px, 0px);
+			cursor: move;
+		}
+	</style>
+</head>
+<body>
+	<div></div>
+	<div id="d1"></div>
+	<div id="d2"></div>
+
+	<pre>
+		首先把拖拽需要的属性，方法都找出来
+		1. 鼠标初始位置，当前位置
+		2. 元素初始位置
+		3. 设置元素当前位置
+
+		总结一句话，根据1和2计算3
+	</pre>
+	<script type="text/javascript">
+		// var target = document.querySelector('div'),
+		// 	// 鼠标点击坐标
+		// 	mStartX = 0,
+		// 	mStartY = 0,
+		// 	// 元素初始位置
+		// 	eStartX = 0,
+		// 	eStartY = 0
+
+		// // 获取元素初始位置
+		// function getTargetPos(elem) {
+		// 	var pos = {x: 0, y: 0}, 
+		// 		cssStyle = window.getComputedStyle(elem),
+		// 		transformVal = cssStyle['transform']
+		// 	// 由于低版本IE几乎没人用了，直接使用getComputedStyle
+		// 	// 因为主流浏览器都支持标准transform，所以上面两个都不进行能力检测了
+
+		// 	// 'none'代表有transform属性但没有设置 'undefiend'代表没有transform属性
+		// 	if (transformVal === 'none') {	
+		// 		elem.style['transform'] = 'translate(0, 0)'
+		// 	} else {
+		// 		let tmp = transformVal.slice(7, -1).split(',') // 子字符串 切割
+		// 		pos.x = Number(tmp[4].trim())
+		// 		pos.y = Number(tmp[5].trim())
+		// 	}
+
+		// 	return pos
+		// }
+
+		// // 设置元素位置
+		// function setTargetPos(elem, pos) {
+		// 	elem.style['transform'] = 'translate('+ pos.x +'px, '+ pos.y +'px)'
+		// }
+
+		// // 鼠标事件
+		// function start(event) {
+		// 	// 获取鼠标初始位置
+		//     mStartX = event.pageX;
+		//     mStartY = event.pageY;
+
+		//     // 获取元素初始位置
+		//     var pos = getTargetPos(target);
+		//     eStartX = pos.x;
+		//     eStartY = pos.y;
+
+		//     // 绑定move, up事件
+		//     document.addEventListener('mousemove', move, false);
+		// }
+
+		// function move(event) {
+		// 	// 获取鼠标当前位置
+		// 	var currentX = event.pageX,
+		// 		currentY = event.pageY
+
+		// 	// 元素当前位置 - 元素初始位置 = 鼠标当前位置 - 鼠标初始位置
+		// 	// 元素当前位置 = 元素初始位置 + 鼠标当前位置 - 鼠标初始位置
+		// 	var offX = currentX - mStartX,
+		// 		offY = currentY - mStartY
+
+		// 	setTargetPos(target, {
+		// 		x: eStartX + offX,
+		// 		y: eStartY + offY
+		// 	})
+		// }
+
+		// function end(event) {
+		// 	// 鼠标up后，删除move事件
+		// 	document.removeEventListener('mousemove', move)
+		// }
+
+		// document.addEventListener('mousedown', start, false)
+		// document.addEventListener('mouseup', end, false)
+	</script>
+
+	<pre>
+		找出了属性和方法后，进行封装
+	</pre>
+
+	<script type="text/javascript">
+		;(function() {
+			// 私有属性放在构造函数中
+			function Drag(elem) {
+				this.elem = elem
+				this.mStartX = 0
+				this.mStartY = 0
+				this.eStartX = 0
+				this.eStartY = 0
+
+				this.init() // 构造函数绑定事件
+			}
+
+			// 这些通用方法都放在原型对象上
+			Drag.prototype = {
+				constructor: Drag,
+				init: function() {
+					this.elem.addEventListener('mousedown', start, false)
+					this.elem.addEventListener('mouseup', end, false)
+					var that = this
+					function start(event) {
+					    mStartX = event.pageX;
+					    mStartY = event.pageY;
+					    var pos = that.getTargetPos(that.elem);
+					    eStartX = pos.x;
+					    eStartY = pos.y;
+					    that.elem.addEventListener('mousemove', move, false);
+					}
+
+					function move(event) {
+						var currentX = event.pageX,
+							currentY = event.pageY,
+							offX = currentX - mStartX,
+							offY = currentY - mStartY
+
+						that.setTargetPos(that.elem, {
+							x: eStartX + offX,
+							y: eStartY + offY
+						})
+					}
+
+					function end(event) {
+						that.elem.removeEventListener('mousemove', move)
+					}
+				},
+				getTargetPos: function(elem) {
+					var pos = {x: 0, y: 0}, 
+						cssStyle = window.getComputedStyle(elem),
+						transformVal = cssStyle['transform']
+					if (transformVal === 'none') {	
+						elem.style['transform'] = 'translate(0, 0)'
+					} else {
+						let tmp = transformVal.slice(7, -1).split(',') // 子字符串 切割
+						pos.x = Number(tmp[4].trim())
+						pos.y = Number(tmp[5].trim())
+					}
+					return pos
+				},
+				setTargetPos: function(elem, pos) {
+					elem.style['transform'] = 'translate('+ pos.x +'px, '+ pos.y +'px)'
+				}
+			}
+
+			window.Drag = Drag // 通过绑定到window上，对外暴露
+		})()
+
+		var div1 = document.getElementById('d1')
+			div2 = document.getElementById('d2')
+			drag1 = new Drag(div1),
+			drag2 = new Drag(div2)
+	</script>
+</body>
+</html>
