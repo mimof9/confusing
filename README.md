@@ -36,6 +36,7 @@
 - 不要死记[].slice.call(arguments)[aa.html](./aa.html)
 - 正则电话号码，邮箱？[ab.html](./ab.html)
 - new关键字做了什么？实现一个new函数[ac.html](./ac.html)
+- jQuery的简洁是怎么实现的？jQuery插件又是什么？[ad](./ad)
 - package.json的dependence到底有什么有？今天拉下来代码发现使用了import，
 		但是在package.json中并没有引入，安装好模块后发现项目可以正常运行。
 		npm install vue-pdf 默认在package.json中引入了，但是删除掉，发现可以运行。

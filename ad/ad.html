@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>测试</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<div></div>
+
+	<pre>
+		为了实现jQuery简单写法，避免new jQuery这种写法
+		所以jQuery是个函数，并且要返回new jQuery对象	
+	</pre>
+	
+	<script type="text/javascript">
+		;
+		(function() {
+
+			// 不是构造函数，是让用户当作普用函数调用的
+			var jQuery = function(selector) {
+				return new jQuery.fn.init(selector)
+			}
+
+			// 原型中的init才是真正的构造函数
+			jQuery.fn = jQuery.prototype = {
+				constructor: jQuery,
+				version: '1.0.0',
+				
+				// 构造函数
+				init: function(selector) {
+					var elem, selector
+					elem = document.querySelector(selector)
+					// 所以，这里的this就是init原型的实例对象, 也就是所谓的jQuery对象
+					this[0] = elem
+					return this
+				}
+
+				// 一大堆方法
+				// ...
+			}
+			
+			// jQuery.fn.init.prototype = jQuery.fn
+ 
+			window.jQuery = window.$ = jQuery // window.jQuery = jQuery暴露出去 window.$ 只是为了让书写更简单
+		})()
+
+		var d = document.querySelector('div')
+		console.log($('div')[0])
+
+	</script>
+</body>
+</html>
