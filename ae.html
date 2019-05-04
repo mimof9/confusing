@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>事件循环机制</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<pre>
+		事件循环机制非常重要，面试中各种考运行结果的问题，都是在考事件循环。
+	</pre>
+
+	<pre>
+		js是单线程的，单线程中有一个唯一的事件循环。
+		每一次事件循环都会把当前的一个宏任务队列中的任务按顺序做完，再把产生所有的微任务队列按顺序做完。
+		直到没有任务。
+	</pre>
+
+	<pre>
+		虽然总体思路简洁明了，但是要注意的细节非常之多。
+
+		1. 怎么要区分宏任务和微任务？
+			宏任务
+				script(整体代码)
+				setTimeout, setInterval
+				setImmediate 
+				I/O
+				UI rendering
+			微任务
+				process.nextTick
+				Promise
+				MutationObserver(html5新特性)
+
+		2. 上面的方法发出的任务，是处在不同的任务队列中的
+			比如说，setTimeout先后发出的任务会在同一个宏任务队列中，但是和setImmediate就不在同一个宏任务队列中
+			当执行时，按队列创建的先后顺序执行，队列内部就不用说了，队列嘛，先进先出。
+			但是这里又有一个特例：setTimeout和setInterval是同源的，加入同一个宏任务队列。
+
+		3. 初次事件循环的时候，全局执行上下文先入栈。函数调用栈为空。只有一个script宏任务。
+			紧接着就是执行产生的所有微任务。
+
+		4. process.nextTick会比Promise先执行，和宏任务的顺序不一样。
+
+	</pre>
+
+	<script type="text/javascript">
+		console.log('golb1');
+
+		setTimeout(function() {
+		    console.log('timeout1');
+		    process.nextTick(function() {
+		        console.log('timeout1_nextTick');
+		    })
+		    new Promise(function(resolve) {
+		        console.log('timeout1_promise');
+		        resolve();
+		    }).then(function() {
+		        console.log('timeout1_then')
+		    })
+		})
+
+		setImmediate(function() {
+		    console.log('immediate1');
+		    process.nextTick(function() {
+		        console.log('immediate1_nextTick');
+		    })
+		    new Promise(function(resolve) {
+		        console.log('immediate1_promise');
+		        resolve();
+		    }).then(function() {
+		        console.log('immediate1_then')
+		    })
+		})
+
+		process.nextTick(function() {
+		    console.log('glob1_nextTick');
+		})
+		new Promise(function(resolve) {
+		    console.log('glob1_promise');
+		    resolve();
+		}).then(function() {
+		    console.log('glob1_then')
+		})
+
+		setTimeout(function() {
+		    console.log('timeout2');
+		    process.nextTick(function() {
+		        console.log('timeout2_nextTick');
+		    })
+		    new Promise(function(resolve) {
+		        console.log('timeout2_promise');
+		        resolve();
+		    }).then(function() {
+		        console.log('timeout2_then')
+		    })
+		})
+
+		process.nextTick(function() {
+		    console.log('glob2_nextTick');
+		})
+		new Promise(function(resolve) {
+		    console.log('glob2_promise');
+		    resolve();
+		}).then(function() {
+		    console.log('glob2_then')
+		})
+
+		setImmediate(function() {
+		    console.log('immediate2');
+		    process.nextTick(function() {
+		        console.log('immediate2_nextTick');
+		    })
+		    new Promise(function(resolve) {
+		        console.log('immediate2_promise');
+		        resolve();
+		    }).then(function() {
+		        console.log('immediate2_then')
+		    })
+		})
+	</script>
+</body>
+</html>

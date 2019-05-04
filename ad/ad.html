@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>测试</title>
+	<title>jQuery的整体架构</title>
 	<meta charset="utf-8">
 </head>
 <body>
@@ -15,12 +15,10 @@
 	<script type="text/javascript">
 		;
 		(function() {
-
 			// 不是构造函数，是让用户当作普用函数调用的
 			var jQuery = function(selector) {
 				return new jQuery.fn.init(selector)
 			}
-
 			// 原型中的init才是真正的构造函数
 			jQuery.fn = jQuery.prototype = {
 				constructor: jQuery,
@@ -34,19 +32,53 @@
 					this[0] = elem
 					return this
 				}
-
 				// 一大堆方法
 				// ...
 			}
 			
-			// jQuery.fn.init.prototype = jQuery.fn
+			// 重点理解这句，把init方法原型指向jQuery.prototype是为了让创建出来的实例能够使用jQuery.prototype中定义的原型方法
+			jQuery.fn.init.prototype = jQuery.fn
  
 			window.jQuery = window.$ = jQuery // window.jQuery = jQuery暴露出去 window.$ 只是为了让书写更简单
-		})()
+			
+			// 以下是jQuery的拓展方法
+			jQuery.extend = jQuery.fn.extend = function(options){
+				console.log(this)
+				for(name in options) {
+					this[name] = options[name]
+				}
+				return this
+			}
 
+			// 利用上面的拓展方法在jQuery添加方法,this指向jQuery，被称为工具方法，直接使用$即可调用那种
+			// 难理解的地方在于，jQuery是一个函数，函数也可以有自己的属性
+			jQuery.extend({
+				ajax: function(){}
+				// ...
+			})
+
+			// this指向jQuery.fn，也就是jQuery.prototype原型上添加方法，
+			jQuery.fn.extend({
+				css: function(){},
+				attr: function(){}
+			})
+		})()
 		var d = document.querySelector('div')
 		console.log($('div')[0])
-
 	</script>
+
+	<pre>
+		因此jQuery插件的写法，利用jQuery提供的拓展方法很容易实现，
+		只需要注意使用模块提供私有化，并且为了保持链式调用return this即可
+
+		(function ($) {
+		  	$.fn.extend({
+		    	myplugin: function () {
+		    	  	...
+		      		return this;
+		    	}
+		  	})
+		})(jQuery);
+	</pre>
 </body>
 </html>
