@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>h5自定义属性出现的意义</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<pre>
+		h5之前，想要获取html标签的自定义属性使用getAttribute
+		这种方式和原生的属性没有什么差别，看上去比较混乱，不那么优雅
+	</pre>
+
+	<div id="d1" my-attr="my-attr1"></div>
+
+	<script type="text/javascript">
+		const d1 = document.querySelector('#d1')
+		let attrs1 = d1.attributes
+		let myAttr1 = d1.getAttribute('my-attr')
+
+		console.log(attrs1)
+		console.log(myAttr1)
+	</script>
+
+	<pre>
+		h5提供新的自定义属性的方式：data-*
+		需要注意的是，因为烤肉串表示法不是合法变量形式，
+		因此使用dataset获取时，需要用驼峰命名法
+	</pre>
+
+	<div id="d2" data-my-attr="my-attr2"></div>
+
+	<script type="text/javascript">
+		const d2 = document.querySelector('#d2')
+		let attrs2 = d2.dataset
+		let myAttr2 = d2.dataset.myAttr
+
+		// delete attrs2.myAttr
+		// 动态增加一个自定义属性
+		d2.dataset.myAttr1 = '你好'
+
+  		console.log(attrs2)
+		console.log(myAttr2)
+	</script>
+</body>
+</html>
