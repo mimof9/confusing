@@ -1,0 +1,15 @@
+https://blog.csdn.net/qq_33744228/article/details/81319485
+https://www.cnblogs.com/zjy850984598/p/10269052.html
+https://www.jianshu.com/p/110430ffe074
+
+
+1. img 动态绑定src 不能正确获取路径
+
+assert目录 + require
+static目录
+
+2. assert目录和static目录的区别 用element-starter做例子
+
+3. 发布约稿出问题
+
+4. 感觉代码有些回退？？
