@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<title>视频2</title>
+		<meta charset='utf-8'>
+		<style>
+			div {
+				position: relative;
+				width: 960px;
+				overflow: hidden;
+			}
+			video {
+				width: 960px;
+				height: 520px;
+			}
+		</style>
+	</head>
+	<body>
+		
+		根据视频播放的时间，触发弹幕
+		监听video的timeupdate事件(事件去MDN上查)
+		需要注意的是：这个事件大概1s检测4次
+
+		<div>
+			<video controls="controls">
+				Your browser does not support the <code>audio</code> element.
+				<source src='./sort.mp4' tyoe="video/mp4">
+			</video>
+		</div>
+
+		<script>
+			video = document.querySelector('video')
+			video.addEventListener('timeupdate', (e) => {
+				if (Math.floor(video.currentTime) === 4)	// 这里其实添加了4条相同的弹幕
+					// 应该把弹幕信息封装成对象 然后给一个是否发送过的标志位来进行判断 这里不演示了
+					createDanmu()
+			}, false)
+
+			function createDanmu() {
+				const danmu = document.createElement('span'),
+					div = document.querySelector('div')
+
+				danmu.style.position = 'absolute'
+				danmu.style.left = '960px'
+				danmu.style.top = '260px'
+				danmu.style.fontSize = '24px'
+				danmu.style.whiteSpace = 'nowrap'
+				danmu.style.color = 'red'
+				danmu.style.transition = 'left 5s ease-in'
+				danmu.innerHTML = 'VIP: 我是一条弹幕'
+
+				div.append(danmu)
+				
+				setTimeout(() => {
+					danmu.style.left = '-200px'
+				}, 0)
+			}
+		</script>
+	</body>
+</html>

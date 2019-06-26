@@ -1,0 +1,54 @@
+<html>
+	<head>
+		<title>视频2</title>
+		<meta charset='utf-8'>
+		<style>
+			div {
+				position: relative;
+				width: 960px;
+				overflow: hidden;
+			}
+			video {
+				width: 960px;
+				height: 520px;
+			}
+		</style>
+	</head>
+	<body>
+		
+		动态创建弹幕DOM节点
+
+		<div>
+			<video controls="controls">
+				Your browser does not support the <code>audio</code> element.
+				<source src='./sort.mp4' tyoe="video/mp4">
+			</video>
+		</div>
+
+		<script>
+			video = document.querySelector('video')
+			video.currentTime = 10
+
+			window.onload = (e) => {
+				const danmu = document.createElement('span'),
+					div = document.querySelector('div')
+
+				danmu.style.position = 'absolute'
+				danmu.style.left = '960px'
+				danmu.style.top = '260px'
+				danmu.style.fontSize = '24px'
+				danmu.style.whiteSpace = 'nowrap'
+				danmu.style.color = 'red'
+				danmu.style.transition = 'left 5s ease-in'
+				danmu.innerHTML = 'VIP: 我是一条弹幕'
+
+				div.append(danmu)
+				
+				setTimeout(() => {
+					danmu.style.left = '-200px'
+				}, 0)
+				
+			}
+		</script>
+	</body>
+</html>
