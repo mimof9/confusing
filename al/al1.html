@@ -1,0 +1,46 @@
+<html>
+	<head>
+		<title>视频1</title>
+		<meta charset='utf-8'>
+		<style>
+			div {
+				position: relative;
+				width: 960px;
+				overflow: hidden;
+			}
+			video {
+				width: 960px;
+				height: 520px;
+			}
+			span {
+				position: absolute;
+				left: 960px;
+				top: 260px;
+				font-size: 24px;
+				white-space: nowrap;
+				color: red;
+				transition:left 5s ease-in
+			}
+
+		</style>
+	</head>
+	<body>
+		
+		自己思考了一下 怎么实现一个弹幕。
+		后面一步步优化
+
+		<div>
+			<span>VIP: 我是一条弹幕</span>
+			<video controls="controls">
+				Your browser does not support the <code>audio</code> element.
+				<source src='./sort.mp4' tyoe="video/mp4">
+			</video>
+		</div>
+
+		<script>
+			window.onload = (e) => {
+				document.querySelector('span').style.left = '-200px'
+			}
+		</script>
+	</body>
+</html>

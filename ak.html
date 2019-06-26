@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>经典排序算法</title>
+		<meta charset="utf-8">
+		<style>
+			.show {
+				display: flex;
+				flex-direction: row;
+				align-items: flex-end;
+				justify-content: space-around;
+				width: 100%;
+				box-sizing: border-box;
+				padding: 100px 200px 0;
+			}
+		</style>
+	</head>
+	<body>
+		排序方法(填入下面列表中词语)：<input type="text" class='sortName'> <br />
+		<ul>
+			<li>bubble</li>
+			<li>select</li>
+			<li>insert</li>
+			<li>quick</li>
+		</ul> 
+		<button class='btn'>排序</button> 进行排序前F5刷新下- -，主要看个动画效果，将就下
+
+		<div class="show">
+			
+		</div>
+
+		<script>
+			const arr = [2, 33, 17, 25, -1, 0, 2],
+				show = document.querySelector('.show'),
+				ipt = document.querySelector('.sortName'),
+				btn = document.querySelector('.btn')
+
+			btn.addEventListener('click', (e) => {
+				const sortName = ipt.value,
+					script = document.createElement('script')
+				script.innerHTML = `${sortName}Sort(arr)`
+				document.body.append(script)
+			}, false)
+			
+			/* 
+				由于arr的数据范围差异可能很大 正常操作是用坐标轴单位控制
+				这里 我简单得把数据映射到1到n上 保留相对大小关系即可
+			*/
+			let showArr = arr.slice()
+			showArr = showArr.map((item, index) => {	// 保留序号 以便恢复顺序
+				return {
+					index: index,
+					val: item
+				}
+			})
+			showArr.sort((a, b) => a.val - b.val)	// 按值排序
+			// 做映射
+			let offset = 0
+			showArr.reduce((sum, item, index) => {
+				const oldVal = item.val
+				if (sum === item.val) offset++
+				item.val = index - offset + 1
+				return oldVal
+			})
+			showArr[0].val = 1
+			showArr.sort((a, b) => a.index - b.index)	// 按序号排序 恢复原来得顺序
+			showArr = showArr.map(item => item.val)
+			/*
+				转换结果：
+					[2, 33, 17, 25, -1, 0, 2]
+					[3, 6,   4,  5,  1, 2, 3]
+			*/
+			
+			const showItems = [],	// 保留DOM数组方便操作
+				frag = document.createDocumentFragment() // 函数片段减少DOM操作
+			showArr.map(item => {
+				const showItem = document.createElement('div')
+				showItem.style.flex = '1'
+				showItem.style.margin = '1px'
+				showItem.style.height = `${item*50}px`
+				showItem.style.background = '#abc'
+				showItems.push(showItem)
+				frag.appendChild(showItem)
+			})
+			show.append(frag)
+
+			// 一些工具函数
+			
+			// 交换showItems中a, b的高度
+			function swapDOM(arr, a, b) {
+				// 排序速度太快 浏览器把中间过程省略直接渲染了结果 
+				// 为了能看清楚过程 对该函数做一个延迟
+				
+				if (this.n == null) this.n = 1
+				else this.n++
+
+				setTimeout(() => {
+					if (a !== b) {
+						const tmp = arr[a].style.height
+						arr[a].style.height = arr[b].style.height
+						arr[b].style.height = tmp
+					}
+				}, this.n * 500)
+				
+			}
+			
+			
+			// 交换数组a, b的值
+			function swap(arr, a, b) {
+				if (a !== b) {	// 因为异或的交换方式，如果两数相同，结果会变成0，因此要重新赋值
+					arr[a] = arr[a] ^ arr[b]
+					arr[b] = arr[a] ^ arr[b]
+					arr[a] = arr[a] ^ arr[b]
+					swapDOM(showItems, a, b)
+				}
+			}
+
+			// 查找原数组[a, b]区间子数组最小值在原数组中的索引
+			function min(arr, a, b) {
+				const minVal = Math.min(...arr.slice(a, b+1))
+				return arr.indexOf(minVal, a)
+			}
+
+			// 二分查找 不能用于插入排序 二分查找需要数组有序，那我用二分查找去实现插入排序前题是数组有序
+			function binarySearch(arr, l, r, target) {
+				arr.sort((a, b) => a - b) // 排序
+				while (l <= r) {
+					console.log(arr.slice(l, r+1))
+					const mid = Math.floor((l + r) / 2) // 向下取整
+					if (arr[mid] === target) 
+						return mid
+					else if (arr[mid] < target) 
+						l = mid + 1
+					else r = mid - 1
+				}
+				return l	// 不存在，返回target插入后的索引
+			}
+
+			/*
+				排序一律按从小到大
+				主要阐释基本思想，为避免分散注意力，暂不考虑细节优化
+				
+				不稳定的排序算法:
+					选择排序、快速排序、希尔排序、堆排序
+				稳定的排序算法:
+					冒泡排序、插入排序、归并排序和基数排序
+
+				冒泡排序，选择排序，每一趟都选出一个最值并确定了这个值的位置
+				插入排序，是随便选一个元素插入到有序序列中
+				注意 上面的三种排序 在过程中都能保证部分有序(感觉还是有用的)
+
+				还有需要注意的是：这些算法 包括快排 都是基于交换的 也就是要依赖上面的swap函数
+				数学推理可以证明依赖swap的排序算法性能上限是O(nlogn)
+				要超越这个上限，需要考虑基数排序这种不依赖交换的函数
+
+			*/
+			
+			// 冒泡排序 O(n^2)
+			function bubbleSort(arr) {
+				const len = arr.length
+				for (let i=0; i<len-1; i++) {
+					for (let j=1; j<len-i; j++) {
+						if (arr[j] < arr[j-1]) swap(arr, j-1, j)
+					}
+				}
+			}
+			// bubbleSort(arr)
+
+			// 选择排序 O(n^2)
+			function selectSort(arr) {
+				const len = arr.length
+				for (let i=0; i<len-1; i++) {
+					const minIndex = min(arr, i, len-1)	// 选择子数组最小值
+					swap(arr, i, minIndex)				// 交换最小值和arr[i]
+				}
+			}
+			// selectSort(arr)
+
+			// 插入排序 O(n^2) 数据量小的时候 非常快
+			function insertSort(arr) {
+				const len = arr.length
+				for (let i=1; i<len; i++) {
+					for (let j=i; j>=0; j--) {
+						if (arr[j] < arr[j-1]) swap(arr, j-1, j)
+					}
+				}
+			}
+			// insertSort(arr)
+
+			// 快速排序 O(nlogn) 性能取决于递归树的深度 中枢选择合理的话就是logn
+			// 然后每一层根据中枢调整的时间是n
+			function quickSort(arr, start=0, end) {
+				if (end == null)	end = arr.length-1
+					
+				if (start <= end) {
+					// 中枢直接选arr[start]
+					const pivot = arr[start]
+
+					// 调整 比中枢小的放左边 比中枢大的放右边
+					let l = start,
+						r = end
+					while(l < r) {
+						while(l<r && arr[r]>=pivot) r--	// 从右边找到第一个比中枢小的和中枢交换
+						swap(arr, l, r)			// l为中枢 换到r
+						while(l<r && arr[l]<=pivot) l++	// 从左边找到第一个比中枢大的和中枢交换
+						swap(arr, l, r)			// r为中枢 换到l
+
+					}	// 结束条件一定是l === r
+
+					// 递归
+					quickSort(arr, start, l - 1)
+					quickSort(arr, l + 1, end)
+				}
+				
+			}
+			// quickSort(arr, 0, arr.length-1)
+		</script>
+	</body>
+</html>

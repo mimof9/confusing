@@ -57,7 +57,7 @@
 				[].push.apply(_args, args) // 对push的要正确的理解，传数组插入的就是一个数组
 
 				if (_args.length < argslen) {
-					return createCurry,call(null, func, _args)
+					return createCurry.call(null, func, _args)
 				}
 
 				return func.call(null, _args)

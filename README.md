@@ -43,3 +43,5 @@
 - 使用vue-cli和vue-router的基本方法[ah](./ah)
 - 使用nginx反响代理做负载均衡，实现动静分离[ai](./ai)
 - px, dp, sp, pt, dpi, ppi之间的关系？[aj](./aj)
+- 经典排序算法[ak.html](./ak.html)
+- 非常简单的视频弹幕[al](./al)
