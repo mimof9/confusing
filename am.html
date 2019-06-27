@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>好玩的动画</title>
+		<meta charset="utf-8">
+		<style>
+			input {
+				-webkit-appearance: none;
+				outline: none;
+				width: 100px;
+				height: 10px;
+    			border-radius: 5px;
+    			background: #ccc;
+    			box-shadow: 0 1px 1px 1px rgba(0,0,0,.5) inset;
+			}
+			input::-webkit-slider-thumb {
+			    -webkit-appearance: none;
+			    width: 12px;
+			    height: 12px;
+			    border-radius: 6px;
+			    background: #ccc;
+			    box-shadow: 0 1px 1px 1px rgba(0,0,0,.5);
+			}
+
+			div {
+				border-radius: 50px;
+				transition: border-radius 1s ease-out, transform 1s ease-out;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div style="width: 100px; height: 100px; background: rgba(128, 128, 128, 0.5);">
+			
+		</div>
+
+		<input type="range" min="0" max="255" value="128" >	<br/>
+		<input type="range" min="0" max="255" value="128" >	<br/>
+		<input type="range" min="0" max="255" value="128" >	<br/>
+		<input type="range" min="0" max="1" step='0.01' value="0.5" >	
+		
+		<script>
+			window.addEventListener('DOMContentLoaded', function(e) {
+				// 全局绑定DOM
+				div = document.querySelector('div')
+				ipts = document.querySelectorAll('input')
+				r = ipts[0]
+				g = ipts[1]
+				b = ipts[2]
+				a = ipts[3]
+
+				// 绑定事件
+				ipts = [].slice.call(ipts)
+				ipts.map(item => {
+					item.addEventListener('input', onHandleColorChange, false)
+				})
+
+				div.addEventListener('mouseenter', function(e) {
+					const 
+						x1 = Math.random() * 20 + 30,
+						x2 = Math.random() * 20 + 30,
+						x3 = Math.random() * 20 + 30,
+						x4 = Math.random() * 20 + 30,
+						x5 = Math.random() * 20 + 30,
+						x6 = Math.random() * 20 + 30,
+						x7 = Math.random() * 20 + 30,
+						x8 = Math.random() * 20 + 30 
+					this.style.borderRadius = `${x1}px ${x2}px ${x3}px ${x4}px / ${x5}px ${x6}px ${x7}px ${x8}px`
+					this.style.transform = 'rotate(10deg)'
+				})
+
+				div.addEventListener('mouseleave', function(e) {
+					this.style.borderRadius = '50px'
+					this.style.transform = null
+				})
+			}, false)
+
+			function onHandleColorChange(e) {
+				div.style.background = `rgb(${r.value}, ${g.value}, ${b.value}, ${a.value})`
+			}
+		</script>
+	</body>
+</html>
