@@ -23,8 +23,8 @@
 			}
 
 			div {
-				border-radius: 50px;
-				transition: border-radius 1s ease-out, transform 1s ease-out;
+				border-radius: 59% 52% 59% 56%;
+				transition: border-radius .2s ease-out, transform .2s ease-out;
 			}
 		</style>
 	</head>
@@ -66,11 +66,11 @@
 						x7 = Math.random() * 20 + 30,
 						x8 = Math.random() * 20 + 30 
 					this.style.borderRadius = `${x1}px ${x2}px ${x3}px ${x4}px / ${x5}px ${x6}px ${x7}px ${x8}px`
-					this.style.transform = 'rotate(10deg)'
+					this.style.transform = 'rotate(-6deg)'
 				})
 
 				div.addEventListener('mouseleave', function(e) {
-					this.style.borderRadius = '50px'
+					this.style.borderRadius = '59% 52% 59% 56%'
 					this.style.transform = null
 				})
 			}, false)
