@@ -1,0 +1,84 @@
+<html>
+	<head>
+		<title>svg</title>
+		<meta charset="utf-8">
+		<script src="./rough.js"></script>
+	</head>
+	<body>
+		<pre>
+			SVG是一种基于XML语法的图像格式，全称(可缩放矢量图)。
+			本质上是文本文件，体积较小，放大不会失真。
+
+			SVG 文件可以直接插入网页，成为 DOM 的一部分，然后用 JavaScript 和 CSS 进行操作。
+		</pre>
+		
+		<pre>
+			用法：
+				1. SVG 代码都放在顶层标签svg之中
+					viewBox属性的值有四个数字，分别是左上角的横坐标和纵坐标、视口的宽度和高度
+				2. SVG 代码也可以写在一个独立文件中，然后用img、object、embed、iframe等标签插入网页。
+				3. CSS也可以用SVG
+				4. SVG文件还可以转换为BASE64编码，用作Data URI
+
+			也就是说，SVG完全可以当作普通图片来使用
+		</pre>
+
+		<pre>
+			最后附带了一个卡通风格的库，感觉很棒
+		</pre>
+
+		<svg width="100" height="100" viewBox="50 50 50 50">
+			<circle id="mycircle" cx="50" cy="50" r="50" />
+		</svg>
+
+		<canvas id='canvas' height="1000" width="1000"></canvas>
+
+		<script>
+			const rc = rough.canvas(document.getElementById('canvas'));
+			rc.rectangle(0, 0, 80, 80); // x, y, width, height
+			rc.circle(140, 40, 80); // centerX, centerY, diameter
+			rc.ellipse(300, 40, 150, 80); // centerX, centerY, width, height
+			rc.line(140, 40, 300, 40); // x1, y1, x2, y2
+
+			rc.rectangle(0, 100, 80, 80, { fill: 'red' })
+			rc.rectangle(100, 100, 80, 80, { 
+				fill: 'red',
+				hachureGap: 8
+			})
+			rc.rectangle(200, 100, 80, 80, { 
+				fill: 'red',
+				hachureGap: 8,
+				hachureAngle: 60
+			})
+			rc.rectangle(300, 100, 80, 80, { 
+				fill: 'red',
+				hachureGap: 8,
+				hachureAngle: 60,
+				fillWeight: 3
+			})
+			rc.rectangle(400, 100, 80, 80, { 
+				fill: 'red',
+				hachureGap: 8,
+				hachureAngle: 60,
+				fillWeight: 3,
+				roughness: 2.8, // 0 很规整
+			})
+			rc.rectangle(500, 100, 80, 80, { 
+				fill: 'red',
+				hachureGap: 8,
+				hachureAngle: 60,
+				fillWeight: 3,
+				bowing: 16
+			})
+			rc.rectangle(600, 100, 80, 80, { 
+				fill: 'red',
+				fillStyle: 'solid'
+			})
+
+			// rc.path('M80 80 A 45 45, 0, 0, 0, 125 125 L 125 80 Z', { fill: 'green' });
+			// rc.path('M230 80 A 45 45, 0, 1, 0, 275 125 L 275 80 Z', { fill: 'purple' });
+			// rc.path('M80 230 A 45 45, 0, 0, 1, 125 275 L 125 230 Z', { fill: 'red' });
+			// rc.path('M230 230 A 45 45, 0, 1, 1, 275 275 L 275 230 Z', { fill: 'blue' });
+		</script>
+	</body>
+</html>
