@@ -1,0 +1,21 @@
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<title>CSS Modules</title>
+	</head>
+	<body>
+		CSS Modules：
+			给CSS加如局部作用域和模块以来，这恰恰是王爷组件最急需的功能
+		更直白的描述是：
+			保证某个组件的样式，不会影响到其他组件
+
+		CSS的规则都是全局的，任何一个组件的样式规则，都对整个页面有效。
+		产生局部作用域的唯一方法，就是使用一个独一无二的class的名字，不会与其他选择器重名。
+		这就是 CSS Modules 的原理。
+		
+		实际使用：
+			CSS Modeuls提供了很多插件去支持各种构建工具
+			create-react-app 2.0之后默认提供了 样式文件命名为.module.css
+			umi中也是默认开启了它
+	</body>
+</html>
