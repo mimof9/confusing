@@ -1,0 +1,47 @@
+<html>
+	<head>
+		<title>不使用flex的居中布局</title>
+		<meta charset="utf-8">
+		<style>
+			div {
+				position: relative;
+				height: 600px;
+				width: 1200px;
+				background: #ccc;
+			}
+
+			img, span {
+				position: absolute;
+				/*top: calc(50% - 50px);
+				left: calc(50% - 150px);*/
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+		</style>
+
+	</head>
+	<body>
+
+		<pre>
+			图片是随便百度的一张，可能会挂掉，挂掉了 换一张就好了
+
+			用flex布局实现的方法就不说了。
+
+			这里我们使用定位的方式实现居中。
+			1. 容器定位，给子元素定位的基础嘛
+			2. 子元素绝对定位 top left设为50% 这样 子元素左上角就在容器中心了
+			3. 使用transform的translate平移子元素的中心到容器中心
+
+			这样就实现了啥都不知道情况下的居中
+		</pre>
+
+		<div>
+			<img src="http://pic37.nipic.com/20140113/8800276_184927469000_2.png" alt="图片" 
+			width=300 height=100>
+
+			<span>abc</span>
+		</div>
+		
+	</body>
+</html>
