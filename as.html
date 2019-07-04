@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<title>深拷贝</title>
+		<meta charset='utf-8'>
+	</head>
+
+	<body>
+		<script>
+			function deepCopy(obj) {
+				// null undefined 直接返回
+				if (obj == null) return obj
+
+				const result = Array.isArray(obj) ? [] : {}
+				for (const key in obj) {
+					console.log(obj[key])
+					if (obj.hasOwnProperty(key)) {
+						if (typeof obj[key] === 'object' || typeof obj[key] === 'function') result[key] = deepCopy(obj[key])
+						else result[key] = obj[key]
+					}
+				}
+				return result
+			}
+
+			const arr = [{'name': 'mimo'}, [1, 2, 3]]
+			let newarr = deepCopy(arr)
+		</script>
+	</body>
+</html>

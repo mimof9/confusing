@@ -52,3 +52,5 @@
 - 不知道图片大小以及容器宽高的情况下，如何居中图片？ [aq.html](./aq.html)
 - 旋转的小立方体 [ar](./ar)
 	* 目标效果:![example](./ar/v1.png "目标效果")
+- 深拷贝 [as.html](./as.html)
+- Promise写法的简单思路 [at.html](./at.html)

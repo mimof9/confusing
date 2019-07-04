@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<title>Promise写法的简单思路</title>
+		<meta charset="utf-8">
+	</head>
+
+	<body>
+		
+		<pre>
+			Promise写法看起来很神奇：
+				但是基本的思路却没那么难，维护好状态即可。
+
+			当然，要按照Promise标准去实现还需要做更多更多的工作。
+			这里抛砖引玉
+		</pre>
+
+		<script>
+			class PromiseM {
+				constructor(process) {
+					this.status = 'pending'
+					this.msg = ''
+					process(this.resolve.bind(this), this.reject.bind(this))
+					return this
+				}
+
+				resolve(val) {
+					this.status = 'fulfilled'
+					this.msg = val
+				}
+
+				reject(err) {
+					this.status = 'rejected'
+					this.msg = err
+				}
+
+				then(fufilled, rejected) {
+					if (this.status === 'fulfilled') {
+						fufilled(this.msg)
+					} else if (this.status === 'rejected') {
+						rejected(this.msg)
+					}
+				}
+			}
+
+			new PromiseM(function(resolve, reject) {
+				console.log('超简单的Promise')
+				resolve('成功')
+				// reject('失败')
+			}).then(function(msg) {
+				console.log(msg)
+			}, function(err) {
+				console.log(err)
+			})
+
+		</script>	
+	</body>
+</html>
