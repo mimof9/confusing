@@ -15,6 +15,25 @@
 		</pre>
 
 		<script>
+			function A() {
+
+			}
+
+			// A.prototype.xxx = function(){}
+
+			function B() {
+				A.apply(this)
+				// ...
+			}
+			
+			const subPrototype = Object.create(A.prototype)
+			subPrototype.constructor = B
+			B.prototype = subPrototype
+
+
+
+
+
 			class PromiseM {
 				constructor(process) {
 					this.status = 'pending'

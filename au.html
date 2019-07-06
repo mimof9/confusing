@@ -1,0 +1,65 @@
+<html>
+	<head>
+		<title>Generator</title>
+		<meta charset="utf-8">
+	</head>
+
+	<body>
+		<pre>
+			协程： 意思是多个线程互相协作，完成异步任务。
+			引入了一个yield命令，
+			协程遇到 yield 命令就暂停，等到执行权返回，再从暂停的地方继续往后执行。它的最大优点，就是代码的写法非常像同步操作，如果去除yield命令，简直一模一样。
+		</pre>
+
+		<pre>
+			Generator函数是协程在ES6的实现，最大特点就是可以交出函数的执行权（即暂停执行）
+
+			语法：function*
+
+			整个 Generator 函数就是一个封装的异步任务，或者说是异步任务的容器。异步操作需要暂停的地方，都用 yield 语句注明
+			
+			next方法：返回{value: val, done: boolean}
+			// 这里非常重要 start
+			value 属性是 yield 语句后面表达式的值，表示当前阶段的值
+			var y = yield x + 2; 这句话中就是 x + 2的值
+			那么 y也需要有一个值，y的值是下次调用next的时候 通过参数传递进来的。
+			// 这里非常重要 end
+			done 属性是一个布尔值，表示 Generator 函数是否执行完毕
+			
+		</pre>
+
+		<script>
+			function* gen(x) {
+				var y = yield x + 2
+				var z = yield y + 2
+				return y
+			} 
+
+			var g = gen(2)
+			// console.log(g.next()) // {value: 3, done: false}
+			// console.log(g.next()) // {value: undefined, done: true}
+			let a = g.next()
+			console.log(a) // {value: 3, done: false}
+			console.log(g.next(a.value)) // {value: 2, done: false}
+		</script>
+
+		<pre>
+			异常捕获：实现了时间和空间上的分离
+		</pre>
+
+		<script>
+			function* gen1(x){
+				try {
+					var y = yield x + 2
+				} catch (e){ 
+					console.log(e) // 出错了
+				}
+				return y
+			}
+
+			var g1 = gen1(1)
+			console.log(g1.next()) // {value: 3, done: false}
+			g1.throw('出错了') // 第二次执行的时候(获取y的值) 抛出异常
+		</script>
+	</body>
+</html>

@@ -54,3 +54,4 @@
 	* 目标效果:![example](./ar/v1.png "目标效果")
 - 深拷贝 [as.html](./as.html)
 - Promise写法的简单思路 [at.html](./at.html)
+- 异步的协程解决方案，ES6的协程实现Generator [au.html](./au.html)
