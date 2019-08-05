@@ -1,0 +1,124 @@
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<style>
+			.circle_process {
+				position: relative;
+				width: 200px;
+				height: 200px;
+				/*border: 1px solid black;*/
+			}
+
+			.left {
+				float: left;
+			}
+
+			.right {
+				float: right;
+			}
+
+			.number {
+				position: absolute;
+				font-size: 100px;
+				color: lightgray;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+
+			@keyframes circle_right {
+				0%{
+					transform: rotate(-135deg);
+				}
+				50%, 100% {
+					transform: rotate(45deg);
+				}
+			}
+			.right {
+				position: relative;
+				width: 100px;
+				height: 200px;
+				overflow: hidden;
+			}
+			.rightcircle {
+				box-sizing: border-box;
+				width: 200px;
+				height: 200px;
+				border: 20px solid transparent;
+				border-radius: 50%;
+				border-top: 20px solid lightgreen;
+				border-right: 20px solid lightgreen;
+				position: absolute;
+				top: 0;
+				right: 0;
+				transform: rotate(-135deg);
+				/*animation: circle_right 2s linear infinite;*/
+			}
+			
+
+			@keyframes circle_left {
+				0%, 50% {
+					transform: rotate(-135deg);
+				}
+				100% {
+					transform: rotate(45deg);
+				}
+			}
+			.left {
+				position: relative;
+				width: 100px;
+				height: 200px;
+				overflow: hidden;
+			}
+			.leftcircle {
+				box-sizing: border-box;
+				width: 200px;
+				height: 200px;
+				border: 20px solid transparent;
+				border-radius: 50%;
+				border-left: 20px solid lightgreen;
+				border-bottom: 20px solid lightgreen;
+				transform: rotate(-135deg);
+				/*animation: circle_left 2s linear infinite;*/
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class='circle_process'>
+			<div class='left'>
+				<div class='leftcircle'></div>
+			</div>
+			<div class='right'>
+				<div class='rightcircle'></div>
+			</div>
+			<div class='number'>
+				0
+			</div>
+		</div>
+
+		<script>
+			function getTime() {
+				var date = new Date()
+				var second = date.getSeconds()
+
+				var rightcircle = document.getElementsByClassName('rightcircle')[0]
+				var leftcircle = document.getElementsByClassName('leftcircle')[0]
+				var number = document.getElementsByClassName('number')[0]
+				number.innerHTML = second
+
+				if (second<=30) {
+					rightcircle.style.cssText = `transform: rotate(${-135+6*second}deg)`
+					leftcircle.style.cssText = `transform: rotate(-135deg)`
+				} else {
+					rightcircle.style.cssText = `transform: rotate(45deg)`
+					leftcircle.style.cssText = `transform: rotate(${-135+6*(second-30)}deg)`
+				}
+			}
+			getTime()
+			setInterval(function() {
+				getTime()
+			}, 1000)
+		</script>
+	</body>	
+</html>

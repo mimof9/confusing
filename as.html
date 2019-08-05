@@ -14,7 +14,7 @@
 				for (const key in obj) {
 					console.log(obj[key])
 					if (obj.hasOwnProperty(key)) {
-						if (typeof obj[key] === 'object' || typeof obj[key] === 'function') result[key] = deepCopy(obj[key])
+						if (typeof obj[key] === 'object') result[key] = deepCopy(obj[key])
 						else result[key] = obj[key]
 					}
 				}

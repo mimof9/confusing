@@ -26,8 +26,8 @@
 				I/O
 				UI rendering
 			微任务
-				process.nextTick
-				Promise
+				process.nextTick // 本次"事件循环"的执行栈尾部 在Promise前
+				Promise			 // 下次"事件循环"触发
 				MutationObserver(html5新特性)
 
 		2. 上面的方法发出的任务，是处在不同的任务队列中的

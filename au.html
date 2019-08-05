@@ -20,9 +20,9 @@
 			
 			next方法：返回{value: val, done: boolean}
 			// 这里非常重要 start
-			value 属性是 yield 语句后面表达式的值，表示当前阶段的值
-			var y = yield x + 2; 这句话中就是 x + 2的值
-			那么 y也需要有一个值，y的值是下次调用next的时候 通过参数传递进来的。
+				value 属性是 yield 语句后面表达式的值，表示当前阶段的值
+				var y = yield x + 2; 这句话中就是 x + 2的值
+				那么 y也需要有一个值，y的值怎么计算呢？下一次调用next的参数是yield x + 2的值 然后再通过计算得到。
 			// 这里非常重要 end
 			done 属性是一个布尔值，表示 Generator 函数是否执行完毕
 			
