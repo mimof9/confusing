@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset='utf-8'>
+		<title>轮播图</title>
+		<style>
+			html, body {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+			}
+			.carousel {
+				margin: 0 auto;
+				width: 375px;
+				height: 157.5px;
+			}
+			.banner-wrapper {
+				width: 100%;
+				height: 100%;
+				display: none;
+			}
+			.banner {
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<pre>
+			直接切换的轮播
+		</pre>
+
+		<div class='carousel'>
+			<div class='banner-wrapper' style='display: block;'>
+				<img class='banner' src="./img/1.jpg" alt="轮播图1">
+			</div>
+			<div class='banner-wrapper'>
+				<img class='banner' src="./img/2.jpg" alt="轮播图2">
+			</div>
+			<div class='banner-wrapper'>
+				<img class='banner' src="./img/3.jpg" alt="轮播图3">
+			</div>
+		</div>
+			
+		<script>
+			const banners = document.querySelectorAll('.banner-wrapper')
+			
+			function carousel(e) {
+				if (!carousel.curIndex)
+					carousel.curIndex = 0
+				
+				const nextIndex = (carousel.curIndex + 1) % carousel.size
+				
+				banners[carousel.curIndex].style.display = 'none'
+				banners[nextIndex].style.display = 'block'
+
+				carousel.curIndex = nextIndex
+			}
+			carousel.size = 3
+
+			const interval = setInterval(carousel, 2000)
+			setTimeout(e => clearInterval(interval), 10000)
+		</script>
+
+	</body>
+</html>

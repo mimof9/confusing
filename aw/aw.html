@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset='utf-8'>
+		<title>轮播图</title>
+		<style>
+			html, body {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+			}
+			.carousel {
+				margin: 0 auto;
+				width: 375px;
+				height: 157.5px;
+				overflow: hidden;		/*不显示溢出的东西*/
+				white-space: nowrap;	/*配合inline-block阻止换行*/
+				font-size: 0;			/*取消内联造成的空白间隙*/
+			}
+			.banner-wrapper {
+				width: 100%;
+				height: 100%;
+				display: inline-block;
+				/*transition: transform 1s linear;*/ /*左移的时候添加动画*/
+			}
+			.banner {
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<pre>
+			思路：
+			1. 要看做成什么样的轮播，
+				如果只是单纯的淡出淡出，或者直接切换的。
+				那么很简单，直接根据当前index算出nextIndex nextIndex = (index + 1) % length
+
+			2. 如果要做滑动效果 就会难一点
+				一般都是从右往左滑动。
+				思路是，同时让当前轮播图和下一轮播图显示在正常流中，当然下一轮播图overflow: hidden;掉。
+				周期定时执行左滑过渡动画。
+				执行完动画之后，清空过渡效果，把新的当前轮播图和下一轮播图放到正确的位置
+
+			本文用inline-block做，失败了，问题出在循环到最后一张轮播图的时候，
+			下一次index = 2 nextIndex = 0 应该是index在前 nextIndex在后 
+			但是由于我们使用了inline-block的特性 让两张轮播图自己排序了 
+			因此 效果变成了nextIndex在前 index在后
+
+			感悟是：如果要封装一个东西，尽量把逻辑都自己完成，而不是去使用取巧的技术。
+			硬逻辑代码可以多写一些，会减少很多问题。
+		</pre>
+
+		<div class='carousel'>
+			<div class='banner-wrapper'>
+				<img class='banner' src="./img/1.jpg" alt="轮播图1">
+			</div>
+			<div class='banner-wrapper'>
+				<img class='banner' src="./img/2.jpg" alt="轮播图2">
+			</div>
+			<div class='banner-wrapper' style='display: none;'>
+				<img class='banner' src="./img/3.jpg" alt="轮播图3">
+			</div>
+		</div>
+			
+		<script>
+			const banners = document.querySelectorAll('.banner-wrapper')
+			
+			function carousel(e) {
+				if (!carousel.curIndex)
+					carousel.curIndex = 0
+				
+				const nextIndex = (carousel.curIndex + 1) % carousel.size
+				
+				banners[carousel.curIndex].style.transition = 'transform 1s linear'
+				banners[nextIndex].style.transition = 'transform 1s linear'
+				banners[carousel.curIndex].style.transform = 'translate(-100%)'
+				banners[nextIndex].style.transform = 'translate(-100%)'
+
+				carousel.curIndex = nextIndex
+
+				setTimeout(e => {
+					// 目的：只display:inline-block;当前轮播图和下一轮播图
+					// 方法：清除所有过渡效果重新设置位置
+					// 不是数组 但是有forEach方法
+					banners.forEach((cur, index) => {
+						banners[index].style.display = 'none'
+						banners[index].style.transition = undefined
+					})
+
+					const newNextIndex = (carousel.curIndex + 1) % carousel.size
+
+					banners[carousel.curIndex].style.display = 'inline-block'
+					banners[newNextIndex].style.display = 'inline-block'
+					banners[carousel.curIndex].style.transform = 'translate(0)'
+					banners[newNextIndex].style.transform = 'translate(0)'
+				}, 1100)
+
+				// 0 1  --- 1 2
+				// 1 2  --- 2 0
+				// 2 0
+			}
+			carousel.size = 3
+			const interval = setInterval(carousel, 2000)
+			setTimeout(e => clearInterval(interval), 10000)
+		</script>
+
+	</body>
+</html>

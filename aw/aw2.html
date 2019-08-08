@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset='utf-8'>
+		<title>轮播图</title>
+		<style>
+			html, body {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+			}
+			.carousel {
+				margin: 0 auto;
+				width: 375px;
+				height: 157.5px;
+				overflow: hidden;		/*不显示溢出的东西*/
+				position: relative;
+			}
+			.banner-wrapper {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				display: none;
+			}
+			.banner {
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div class='carousel'>
+			<div class='banner-wrapper' style='display: block;'>
+				<img class='banner' src="./img/1.jpg" alt="轮播图1">
+			</div>
+			<div class='banner-wrapper' style='display: block; left: 100%;'>
+				<img class='banner' src="./img/2.jpg" alt="轮播图2">
+			</div>
+			<div class='banner-wrapper'>
+				<img class='banner' src="./img/3.jpg" alt="轮播图3">
+			</div>
+		</div>
+			
+		<script>
+			const banners = document.querySelectorAll('.banner-wrapper')
+			
+			function carousel(e) {
+				if (!carousel.curIndex)
+					carousel.curIndex = 0
+				
+				let nextIndex = (carousel.curIndex + 1) % carousel.size
+				
+				banners[carousel.curIndex].style.transition = 'transform 1s linear'
+				banners[nextIndex].style.transition = 'transform 1s linear'
+
+				banners[carousel.curIndex].style.transform = 'translate(-100%)'
+				banners[nextIndex].style.transform = 'translate(-100%)'
+
+				carousel.curIndex = nextIndex
+
+				setTimeout(e => {
+					banners.forEach((cur, index) => {
+						banners[index].style.display = 'none'
+						banners[index].style.transition = undefined
+						banners[index].style.transform = 'translate(0)'
+					})
+					
+					nextIndex = (carousel.curIndex + 1) % carousel.size
+					banners[carousel.curIndex].style.display = 'block'
+					banners[carousel.curIndex].style.left = '0' 
+					banners[carousel.curIndex].style.top = '0'
+					banners[nextIndex].style.display = 'block'
+					banners[nextIndex].style.left = '100%' 
+					banners[nextIndex].style.top = '0'
+				}, 1000)
+			}
+			carousel.size = 3
+
+			const interval = setInterval(carousel, 2000)
+			setTimeout(e => clearInterval(interval), 10000)
+		</script>
+
+	</body>
+</html>
