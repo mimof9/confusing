@@ -78,7 +78,17 @@
 			}
 			carousel.size = 3
 
-			const interval = setInterval(carousel, 2000)
+			banners.forEach(cur => {
+				cur.addEventListener('mouseover', function(e) {
+					 clearInterval(interval)
+				}, false)
+
+				cur.addEventListener('mouseout', function(e) {
+					 interval = setInterval(carousel, 2000)
+				}, false)
+			})
+
+			let interval = setInterval(carousel, 2000)
 			setTimeout(e => clearInterval(interval), 10000)
 		</script>
 

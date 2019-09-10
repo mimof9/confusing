@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>Number</title>
+</head>
+<body>
+	
+<script>
+function _Number(str) {
+	// 去除前后空格
+	str = str.trim()
+	
+	// 提取正负号
+	let arr = str.split('')
+	let sign = 1
+	if (arr[0] === '-') {
+		arr = arr.slice(1)
+		sign = -1
+	}
+
+	// 找到小数点，切分整数和小数部分
+	let integer, decimal
+	const dotIndex = arr.indexOf('.')
+	if (dotIndex === -1) {	// 只有整数部分
+		integer = trimZeroStart(arr)
+		decimal = []
+	} else {	// 不确定 需要考虑 x. .y x.y 的形式
+		let zeroEnd = -1, zeroStart = -1
+		integer = trimZeroStart(arr.slice(0, dotIndex))
+		decimal = trimZeroEnd(arr.slice(dotIndex+1))
+	}
+
+	// 计算答案
+	let ansInteger = 0, ansDecimal = 0
+	if (integer.length === 0 && decimal.length === 0) return NaN
+	if (integer.length !== 0) {
+		for (let i=0; i<integer.length; i++) {
+			if (arr[i] < '0' || arr[i] > '9') return NaN
+			ansInteger = ansInteger * 10 + (integer[i] - '0')
+		}
+	}
+	if (decimal.length !== 0) {
+		for (let i=decimal.length-1; i>=0; i--) {
+			if (arr[i] < '0' || arr[i] > '9') return NaN
+			ansDecimal = ansDecimal * 0.1 + (decimal[i] - '0') * 0.1
+		}
+	}
+
+	return sign*(ansInteger + ansDecimal)
+}
+
+function trimZeroStart(arr) {
+	let zeroEnd = -1
+	for (let i=0; i<arr.length; i++)
+		if (arr[i] === '0') zeroEnd = i
+		else break
+	if (zeroEnd !== -1) 
+		if (zeroEnd === arr.length-1)
+			return ['0']
+		else
+			return arr.slice(zeroEnd+1)
+	return arr
+}
+
+function trimZeroEnd(arr) {
+	let zeroStart = -1
+	for (let i=arr.length-1; i>=0; i--)
+		if (arr[i] === '0') zeroStart = i
+		else break
+	if (zeroStart !== -1)
+		if (zeroStart === 0)
+			return ['0']
+		else
+			return arr.slice(0, zeroStart)
+	return arr
+}
+</script>
+
+</body>
+</html>
